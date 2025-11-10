@@ -1,0 +1,197 @@
+library(tidyverse)
+rm(list = ls()) # clear environment
+
+if (Sys.info()["sysname"] == "Darwin") {  # Darwin is the OS name for Mac
+    setwd("/Users/joellevtov/Library/CloudStorage/OneDrive-SWMHGmbH/GAC")
+} else if (Sys.info()["sysname"] == "Windows") {
+    setwd("C:/path/to/your/windows/directory")  # Replace with Windows path
+} else {
+    print("Operating system not recognized")
+}
+
+gac_data <- read.csv2('/Users/joellevtov/Library/CloudStorage/OneDrive-SWMHGmbH/GAC/GAC Daten Roh.csv')
+gac_data <- gac_data |> 
+    mutate(Anzahl = as.numeric(Anzahl))
+# Xs become NAs when converting to numeric
+
+# Die Rohen Zahlen: Wie viele Leute kriegen überhaupt solche OPs in Deutschland?
+gac_data_total_per_year <- gac_data |> 
+    filter(Bundesland == "Deutschland") |>
+    filter(Geschlecht != "Alle Geschlechter") |> 
+    filter(Wohnort.Behandlungsort == "nach Wohnort") |>
+    filter(Altersgruppe == "Alle Altersgruppen") |>
+    group_by(Jahr) |> 
+    select(-Wohnort.Behandlungsort, -Bundesland, -Altersgruppe) |> 
+    view()
+gac_data_total_per_year <- gac_data_total_per_year |>
+    pivot_wider(
+        names_from = Geschlecht,
+        values_from = Anzahl
+    ) |>
+    view()
+write_csv(gac_data_total_per_year, "gac_data_total_per_year.csv")
+
+# * Analysis by Wohnort (residence) *
+by_wohnort <- gac_data |> 
+    filter(Wohnort.Behandlungsort=="nach Wohnort")
+by_wohnort <- gac_data |> 
+    filter(Wohnort.Behandlungsort == "nach Wohnort") |> 
+    filter(Bundesland != "Alle Orte" & 
+           Bundesland != "Deutschland" & 
+           Bundesland != "keine Angabe" &
+           Bundesland != "Wohnsitz im Ausland") 
+
+# Für Histogramm - durchschnittliches Alter der Person, die die OP kriegt
+age_distribution_per_bundesland <- by_wohnort |> 
+    filter(Altersgruppe != "Alle Altersgruppen" &
+           Altersgruppe != "Unbekannt") |> 
+    filter(Geschlecht != "Alle Geschlechter" &
+           Geschlecht != "Unbekannt") |>
+    select(-Wohnort.Behandlungsort) 
+print(age_distribution_per_bundesland)
+write_csv(age_distribution_per_bundesland, "age_distribution_per_bundesland.csv")
+
+# Nur Deutschland insgesamt
+age_distribution_germany_only <- gac_data |> 
+    filter(Bundesland == "Deutschland") |> 
+    group_by(Altersgruppe) |> 
+    filter(Altersgruppe != "Alle Altersgruppen" &
+           Altersgruppe != "Unbekannt") |>
+    summarize(mean_num_surgeries_per_year = mean(Anzahl, na.rm = TRUE)) |>
+    mutate(Altersgruppe = factor(Altersgruppe, levels = c(
+        "Unter 1 Jahr",
+        "1 Jahr bis unter 5 Jahre",
+        "5 bis unter 10 Jahre",
+        "10 bis unter 15 Jahre",
+        "15 bis unter 20 Jahre",
+        "20 bis unter 25 Jahre",
+        "25 bis unter 30 Jahre",
+        "30 bis unter 35 Jahre",
+        "35 bis unter 40 Jahre",
+        "40 bis unter 45 Jahre",
+        "45 bis unter 50 Jahre",
+        "50 bis unter 55 Jahre",
+        "55 bis unter 60 Jahre",
+        "60 bis unter 65 Jahre",
+        "65 bis unter 70 Jahre",
+        "70 bis unter 75 Jahre",
+        "75 bis unter 80 Jahre",
+        "80 bis unter 85 Jahre",
+        "85 bis unter 90 Jahre",
+        "90 bis unter 95 Jahre",
+        "95 Jahre und älter"
+    ))) |>
+    arrange(Altersgruppe)
+view(age_distribution_germany_only)
+write_csv(age_distribution_germany_only, "age_distribution_germany_only.csv")
+
+unter_5_Jahren_gac_surgeries <- gac_data |> 
+    filter(str_detect(Altersgruppe, regex("Unter 1 Jahr", ignore_case = TRUE)) | str_detect(Altersgruppe, regex("1 Jahr bis unter 5 Jahre", ignore_case = TRUE))) |> 
+    filter(Geschlecht != "Alle Geschlechter" &
+           Geschlecht != "Unbekannt") |>
+    filter(Bundesland != "Deutschland" & 
+    Bundesland != "Alle Orte") |>
+    filter(Anzahl > 0) |> 
+    mutate(Altersgruppe = factor(Altersgruppe, levels = c(
+        "Unter 1 Jahr",
+        "1 Jahr bis unter 5 Jahre")))
+view(unter_5_Jahren_gac_surgeries)
+print("Das heißt, es gab 6 Fälle von GAC Operationen bei Kindern unter 5 Jahren in ganz Deutschland von 2005-2024.")
+write_csv(unter_5_Jahren_gac_surgeries, "unter_5_Jahren_gac_surgeries.csv")
+
+# Pro Bundesland
+by_wohnort_bundesland_average <- by_wohnort |>
+    group_by(Bundesland) |> 
+    summarize(mean_anzahl = mean(Anzahl, na.rm = TRUE)) 
+print(by_wohnort_bundesland_average) # not yet per 100k people - don't read too much into this
+
+if (Sys.info()["sysname"] == "Darwin") {  # Darwin is the OS name for Mac
+    population <- read_csv("/Users/joellevtov/Library/CloudStorage/OneDrive-SWMHGmbH/pop bundesländer.csv")
+} else if (Sys.info()["sysname"] == "Windows") {
+
+} else {
+    print("Operating system not recognized")
+}
+
+population <- population |> 
+    rename(Bundesland = 'Vorspalte-ind1') |> 
+    rename(Bevölkerung = right) |> 
+    mutate(Bevölkerung = as.numeric(Bevölkerung))
+
+bundesländer_avg_gac_surgeries <- merge(by_wohnort_bundesland_average, population, by="Bundesland") 
+print(bundesländer_avg_gac_surgeries)
+
+bundesländer_avg_gac_surgeries <- bundesländer_avg_gac_surgeries |> 
+    mutate(surgeries_per_100k = (mean_anzahl / Bevölkerung) * 100000) |> 
+    arrange(desc(surgeries_per_100k))
+print(bundesländer_avg_gac_surgeries)
+
+bundesländer_avg_gac_surgeries <- bundesländer_avg_gac_surgeries |> 
+    select(-mean_anzahl, -Bevölkerung) |> 
+    mutate(surgeries_per_100k = round(surgeries_per_100k, 2)) 
+write_csv(bundesländer_avg_gac_surgeries, "bundesländer_avg_gac_surgeries.csv")
+
+# * Analysis by Wohnort, per year (residence) *
+avg_num_gac_surgeries_per_year <- age_distribution_per_bundesland |> 
+    group_by(Bundesland, Jahr) |> 
+    summarize(mean_anzahl = mean(Anzahl, na.rm = TRUE)) 
+
+bundesländer_avg_gac_surgeries_with_year <- merge(avg_num_gac_surgeries_per_year, population, by="Bundesland") |> 
+    group_by(Bundesland) |> 
+    mutate(surgeries_per_100k = (mean_anzahl / Bevölkerung) * 100000) |> 
+    arrange(desc(surgeries_per_100k)) |> 
+    select(-mean_anzahl, -Bevölkerung) |> 
+    mutate(surgeries_per_100k = round(surgeries_per_100k, 2)) 
+
+bundesländer_avg_gac_surgeries_with_year <- bundesländer_avg_gac_surgeries_with_year |> 
+    arrange(desc(Jahr)) 
+
+bundesländer_avg_gac_surgeries_with_year_top_2 <- bundesländer_avg_gac_surgeries_with_year |>
+    group_by(Jahr) |>
+    slice_head(n = 2) |>
+    arrange(desc(Jahr)) |>
+    ungroup() |> 
+    view()
+
+
+# * Analysis by Behandlungsort * 
+by_behandlungsort <- gac_data |> 
+    filter(Wohnort.Behandlungsort == "nach Behandlungsort") |> 
+    filter(Bundesland != "Alle Orte" & 
+           Bundesland != "Deutschland" & 
+           Bundesland != "keine Angabe" &
+           Bundesland != "Wohnsitz im Ausland") 
+unique(by_behandlungsort$Bundesland)
+by_behandlungsort_age_average <- by_behandlungsort |> 
+    filter(Altersgruppe != "Alle Altersgruppen" &
+           Altersgruppe != "Unbekannt") |> 
+    filter(Geschlecht != "Alle Geschlechter" &
+           Geschlecht != "Unbekannt") |>
+    select(-Wohnort.Behandlungsort) 
+print(by_behandlungsort_age_average)
+write_csv(by_behandlungsort_age_average, "by_behandlungsort_age.csv")
+
+
+avg_gac_surgiers_performed_per_bundesland <- by_behandlungsort_age_average |>
+    group_by(Bundesland) |> 
+    summarize(mean_anzahl = mean(Anzahl, na.rm = TRUE)) |> 
+    arrange(desc(mean_anzahl))
+
+print(avg_gac_surgiers_performed_per_bundesland)
+# In Bayern werden durchscnittlich am meisten geschlechtsangleichende OPs durchgeführt.
+# Seit wann ist das so?
+
+gac_surgeries_pro_bundesland <- by_behandlungsort_age_average |> 
+    #usw
+
+# Vertelung nach Altersgruppe 2024
+gac_data_2024_age_germany_only <- gac_data |> 
+    filter(Jahr == 2024) |> 
+    filter(Wohnort.Behandlungsort == "nach Wohnort") |>
+    filter(Bundesland == "Deutschland") |>
+    filter(Geschlecht == "Alle Geschlechter") |>
+    filter(Altersgruppe != "Alle Altersgruppen" &
+           Altersgruppe != "Unbekannt") |>
+    select(-Wohnort.Behandlungsort, -Bundesland, -Geschlecht, -Jahr) |> 
+    view()
+write_csv(gac_data_2024_age_germany_only, "gac_data_2024_age_germany_only.csv")

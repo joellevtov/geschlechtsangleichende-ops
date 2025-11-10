@@ -2,14 +2,14 @@ library(tidyverse)
 rm(list = ls()) # clear environment
 
 if (Sys.info()["sysname"] == "Darwin") {  # Darwin is the OS name for Mac
-    setwd("/Users/joellevtov/Library/CloudStorage/OneDrive-SWMHGmbH/GAC")
+    setwd("/Users/joellevtov/Library/CloudStorage/OneDrive-SWMHGmbH/GAC/geschlechtsangleichende-ops")
 } else if (Sys.info()["sysname"] == "Windows") {
     setwd("C:/path/to/your/windows/directory")  # Replace with Windows path
 } else {
     print("Operating system not recognized")
 }
 
-gac_data <- read.csv2('/Users/joellevtov/Library/CloudStorage/OneDrive-SWMHGmbH/GAC/GAC Daten Roh.csv')
+gac_data <- read.csv2('GAC Daten Roh.csv')
 gac_data <- gac_data |> 
     mutate(Anzahl = as.numeric(Anzahl))
 # Xs become NAs when converting to numeric
@@ -106,7 +106,7 @@ by_wohnort_bundesland_average <- by_wohnort |>
 print(by_wohnort_bundesland_average) # not yet per 100k people - don't read too much into this
 
 if (Sys.info()["sysname"] == "Darwin") {  # Darwin is the OS name for Mac
-    population <- read_csv("/Users/joellevtov/Library/CloudStorage/OneDrive-SWMHGmbH/pop bundesländer.csv")
+    population <- read_csv("pop bundesländer.csv")
 } else if (Sys.info()["sysname"] == "Windows") {
 
 } else {

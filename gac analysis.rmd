@@ -1,5 +1,32 @@
-library(tidyverse)
 rm(list = ls()) # clear environment
+library(tidyverse)
+library(restatis)
+# devtools::install_github("CorrelAid/restatis")
+
+
+gen_auth_save("genesis", use_token = FALSE)
+
+gen_metadata_table(
+    code = "23131-0011",
+    database= "genesis",
+)
+gen_table(
+    database = "genesis",
+    name = "23131-0011",
+    startyear = "2024",
+    endyear = "2024",
+    classifyingvariable1 = "ICD10C",  # ICD-10 codes
+    classifyingkey1 = "F64",        # Filter for F64
+    job= TRUE
+)
+gen_list_jobs(
+    database= "genesis",
+)
+gen_download_job(
+    database= "genesis",
+    name=str_detect("23131),
+)
+
 
 if (Sys.info()["sysname"] == "Darwin") {  # Darwin is the OS name for Mac
     setwd("/Users/joellevtov/Library/CloudStorage/OneDrive-SWMHGmbH/GAC/geschlechtsangleichende-ops")
@@ -141,6 +168,36 @@ unter_5_Jahren_gac_surgeries <- gac_data |>
 view(unter_5_Jahren_gac_surgeries)
 # Logisch: Alle 5 solcher Eingriffe wurden vor 2021 gemacht. 
 write_csv(unter_5_Jahren_gac_surgeries, "unter_5_Jahren_gac_surgeries.csv")
+
+# Unter 18 GA-OPs
+unter_20_Jahren_gac_surgeries <- gac_data |>
+    filter(str_detect(Altersgruppe, regex("Unter 1 Jahr", ignore_case = TRUE)) | 
+           str_detect(Altersgruppe, regex("1 Jahr bis unter 5 Jahre", ignore_case = TRUE)) |
+           str_detect(Altersgruppe, regex("5 bis unter 10 Jahre", ignore_case = TRUE)) |
+           str_detect(Altersgruppe, regex("10 bis unter 15 Jahre", ignore_case = TRUE)) |
+           str_detect(Altersgruppe, regex("15 bis unter 20 Jahre", ignore_case = TRUE))) |> 
+    filter(Geschlecht != "Alle Geschlechter" &
+           Geschlecht != "Unbekannt") |>
+    filter(Bundesland == "Alle Orte") |> 
+    filter(Wohnort.Behandlungsort == "nach Wohnort") |>
+    filter(Anzahl > 0) |> 
+    group_by(Jahr) |> 
+    summarize(Anzahl = sum(Anzahl, na.rm = TRUE)) 
+view(unter_20_Jahren_gac_surgeries)
+# Note: Nicht alle OPs sind wirklich von unter-18 Jährigen, da die 15-20 Jahre Altersgruppe sowohl Minderjährige als auch Volljährige enthält. Mal ohne 15-20 Jährige gerechnet:
+unter_15_Jahren_gac_surgeries <- gac_data |>
+    filter(str_detect(Altersgruppe, regex("Unter 1 Jahr", ignore_case = TRUE)) | 
+           str_detect(Altersgruppe, regex("1 Jahr bis unter 5 Jahre", ignore_case = TRUE)) |
+           str_detect(Altersgruppe, regex("5 bis unter 10 Jahre", ignore_case = TRUE)) |
+           str_detect(Altersgruppe, regex("10 bis unter 15 Jahre", ignore_case = TRUE))) |> 
+    filter(Geschlecht != "Alle Geschlechter" &
+           Geschlecht != "Unbekannt") |>
+    filter(Bundesland == "Alle Orte") |> 
+    filter(Wohnort.Behandlungsort == "nach Wohnort") |>
+    filter(Anzahl > 0) |> 
+    group_by(Jahr) |> 
+    summarize(Anzahl = sum(Anzahl, na.rm = TRUE)) |> 
+    view()
 
 # Pro Bundesland
 by_wohnort_bundesland_average <- by_wohnort |>

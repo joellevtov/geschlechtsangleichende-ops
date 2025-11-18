@@ -1,1 +1,24 @@
 Destatis Daten GAC.numbers
+
+# R temporary files
+.Rhistory
+.RData
+.Rproj.user
+*.Rproj
+
+# Python temporary files
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+venv/
+env/
+*.egg-info/
+
+# Data files that might contain sensitive information
+# Uncomment if needed:
+# F64_Daten_Roh.csv
+
+# OS files
+.DS_Store
+Thumbs.db

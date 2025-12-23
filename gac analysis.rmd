@@ -1,53 +1,183 @@
 rm(list = ls()) # clear environment
 library(tidyverse)
 library(restatis)
-options(restatis.use_cache = FALSE)
-# devtools::install_github("CorrelAid/restatis")
+my_locale <- locale(decimal_mark = ",", grouping_mark = ".") # Wichtig, damit Komma als Dezimaltrenner erkannt wird und Punkte als Tausendertrenner
+setwd("/Users/joellevtov/Library/CloudStorage/OneDrive-SWMHGmbH/GAC/geschlechtsangleichende-ops") 
+# setwd("C:/Users/levtovj/OneDrive - SWMH GmbH/GAC")
 
-gen_auth_save("genesis", use_token = FALSE)
+# F64 Analyse
+## Daten einlesen und aufbereiten
+f64_daten <- read_csv('F64 Daten.csv')
+f64_wide <- f64_daten |> 
+    group_by(Jahr, Ort, Geschlecht, Altersgruppe, Wohnort.Behandlungsort) |> 
+    summarize(Zahl = sum(Zahl, na.rm = TRUE), .groups = "drop") |> 
+    pivot_wider(names_from = 'Altersgruppe', values_from = 'Zahl') 
+f64_wide$'90 bis unter 95 Jahre' <- 0
+f64_wide$'95 und älter' <- 0
+f64_wide$Geschlecht <- str_replace(f64_wide$Geschlecht, 'm', 'Männlich') 
+f64_wide$Geschlecht <- str_replace(f64_wide$Geschlecht, 'w', 'Weiblich')
+f64_wide$Geschlecht <- str_replace(f64_wide$Geschlecht, 'u', 'Unbekannt')
+f64_wide <- f64_wide |> 
+    rename(
+        'Bundesland' = 'Ort',
+        'Alle Altersgruppen' = 'insgesamt',
+        'Unter 1 Jahr' = 'unter 1',
+        '1 Jahr bis unter 5 Jahre' = '1-4',
+        '5 bis unter 10 Jahre' = '5-9',
+        '10 bis unter 15 Jahre' = '10-14',
+        '15 bis unter 18 Jahre' = '15-17',
+        '18 bis unter 20 Jahre' = '18-19',
+        '20 bis unter 25 Jahre' = '20-24',
+        '25 bis unter 30 Jahre' = '25-29',
+        '30 bis unter 35 Jahre' = '30-34',
+        '35 bis unter 40 Jahre' = '35-39',
+        '40 bis unter 45 Jahre' = '40-44', 
+        '45 bis unter 50 Jahre' = '45-49',
+        '50 bis unter 55 Jahre' = '50-54',
+        '55 bis unter 60 Jahre' = '55-59',
+        '60 bis unter 65 Jahre' = '60-64',
+        '65 bis unter 70 Jahre' = '65-69', 
+        '70 bis unter 75 Jahre' = '70-74',
+        '75 bis unter 80 Jahre' = '75-79',
+        '80 bis unter 85 Jahre' = '80-84',
+        '85 bis unter 90 Jahre' = '85-89',
+    ) |> 
+    mutate(
+        `15 bis unter 20 Jahre` = if_else(
+            is.na(`15 bis unter 18 Jahre`) & is.na(`18 bis unter 20 Jahre`),
+            NA_real_,
+            rowSums(across(c(`15 bis unter 18 Jahre`, `18 bis unter 20 Jahre`)), na.rm = TRUE)
+        )
+    ) |> 
+    select(-`15 bis unter 18 Jahre`, -`18 bis unter 20 Jahre`)  |> 
+    select(Jahr, 
+        'Bundesland',
+        'Geschlecht', 
+        'Wohnort.Behandlungsort', 
+        'Alle Altersgruppen', 
+        'Unter 1 Jahr', 
+        '1 Jahr bis unter 5 Jahre', 
+        '5 bis unter 10 Jahre', 
+        '10 bis unter 15 Jahre', 
+        '15 bis unter 20 Jahre', 
+        '20 bis unter 25 Jahre', 
+        '25 bis unter 30 Jahre', 
+        '30 bis unter 35 Jahre', 
+        '35 bis unter 40 Jahre', 
+        '40 bis unter 45 Jahre', 
+        '45 bis unter 50 Jahre', 
+        '50 bis unter 55 Jahre', 
+        '55 bis unter 60 Jahre', 
+        '60 bis unter 65 Jahre', 
+        '65 bis unter 70 Jahre', 
+        '70 bis unter 75 Jahre', 
+        '75 bis unter 80 Jahre', 
+        '80 bis unter 85 Jahre', 
+        '85 bis unter 90 Jahre', 
+        '90 bis unter 95 Jahre',
+        '95 und älter'
+    ) 
+f64_long <- f64_wide |>
+    pivot_longer(
+        cols = -c(Jahr, Bundesland, Geschlecht, Wohnort.Behandlungsort),  
+        names_to = "Altersgruppe",  
+        values_to = "Zahl"  
+    )
+f64_long_totals <- f64_long |> 
+    group_by(Jahr, Bundesland, Wohnort.Behandlungsort, Altersgruppe) |>  # Exclude Geschlecht to sum across m/w/u
+    summarize(Zahl = sum(Zahl, na.rm = TRUE), .groups = "drop") |> 
+    mutate(Geschlecht = "Alle Geschlechter")  # Add the total label 
+### "Alle Orte" totals per Geschlecht (sum across all Bundesländer, including Ausland)
+f64_alle_orte_by_gender <- f64_long |>
+  group_by(Jahr, Wohnort.Behandlungsort, Altersgruppe, Geschlecht) |>
+  summarize(Zahl = sum(Zahl, na.rm = TRUE), .groups = "drop") |>
+  mutate(Bundesland = "Alle Orte")
+### "Alle Orte" totals aggregated across Geschlecht (Alle Geschlechter)
+f64_alle_orte_all_genders <- f64_long |>
+  group_by(Jahr, Wohnort.Behandlungsort, Altersgruppe) |>
+  summarize(Zahl = sum(Zahl, na.rm = TRUE), .groups = "drop") |>
+  mutate(Bundesland = "Alle Orte", Geschlecht = "Alle Geschlechter")
+### combine all total rows
+f64_long_totals <- bind_rows(f64_long_totals, f64_alle_orte_by_gender, f64_alle_orte_all_genders)
+### Combine original data with totals
+f64_daten_grouped <- bind_rows(f64_long, f64_long_totals) |> 
+    mutate(Jahr = as.character(Jahr))
+write_csv(f64_daten_grouped, "f64_daten_grouped.csv")
 
-gen_metadata_table(
-    code = "23131-0011",
-    database= "genesis",
-)
-gen_table(
-    database = "genesis",
-    name = "23131-0011",
-    startyear = "2024",
-    endyear = "2024",
-    job= TRUE
-)
-
-    # classifyingvariable1 = "ICD10C",  # ICD-10 codes
-    # classifyingkey1 = "F64",        # Filter for F64
-
-Sys.sleep(5)  # Wait 5 seconds for the job to be registered
-restatis::gen_list_jobs(database = "genesis")
-
-gen_download_job(
-    database= "genesis",
-    name=str_detect("23131),
-)
-
-
-if (Sys.info()["sysname"] == "Darwin") {  # Darwin is the OS name for Mac
-    setwd("/Users/joellevtov/Library/CloudStorage/OneDrive-SWMHGmbH/GAC/geschlechtsangleichende-ops")
-} else if (Sys.info()["sysname"] == "Windows") {
-    setwd("C:/path/to/your/windows/directory")  # Replace with Windows path
-} else {
-    print("Operating system not recognized")
-}
-
-gac_data <- read.csv2('GAC Daten Roh.csv')
-gac_data <- gac_data |> 
-    mutate(Anzahl = as.numeric(Anzahl))
-# Xs become NAs when converting to numeric
-
-# * Wie viele Leute kriegen überhaupt solche OPs in Deutschland? *
-deutschland_zahl_ops_pro_jahr <- gac_data |> 
+## Wie viele F64 Diagnosen gibt es in Deutschland pro Jahr?
+deutschland_zahl_f64_pro_jahr <- f64_daten_grouped |> 
     filter(Bundesland == "Deutschland") |>
-    filter(Geschlecht != "Alle Geschlechter") |> 
+    filter(Geschlecht == "Alle Geschlechter") |> 
+    filter(Altersgruppe == "Alle Altersgruppen") |>
+    filter(Wohnort.Behandlungsort == "nach Behandlungsort") |>
+    group_by(Jahr) |> 
+    select(-Wohnort.Behandlungsort, -Bundesland, -Altersgruppe)  
+print(deutschland_zahl_f64_pro_jahr)
+write_csv(deutschland_zahl_f64_pro_jahr, "deutschland_zahl_f64_pro_jahr.csv")
+
+## Durchscnittliche Zahl F64 Diagnosen pro Bundesland (Behandlungsort)
+avg_f64_diagnoses_per_bundesland_behandlungsort <- f64_daten_grouped |> 
+    filter(Geschlecht == "Alle Geschlechter") |> 
+    filter(Altersgruppe == "Alle Altersgruppen") |>
+    filter(Wohnort.Behandlungsort == "nach Behandlungsort") |>
+    filter(Bundesland != "Deutschland") |>
+    group_by(Bundesland) |> 
+    summarize(median_anzahl = median(Zahl, na.rm = TRUE)) |> 
+    arrange(desc(median_anzahl))
+print(avg_f64_diagnoses_per_bundesland_behandlungsort)
+
+## Durchscnittliche Zahl F64 Diagnosen pro Bundesland (Wohnort)
+avg_f64_diagnoses_per_bundesland_wohnort <- f64_daten_grouped |> 
+    filter(Geschlecht == "Alle Geschlechter") |> 
+    filter(Altersgruppe == "Alle Altersgruppen") |>
     filter(Wohnort.Behandlungsort == "nach Wohnort") |>
+    filter(Bundesland != "Deutschland" & Bundesland != "Insgesamt" & Bundesland != "Ausland") |>
+    group_by(Bundesland) |> 
+    summarize(median_anzahl = median(Zahl, na.rm = TRUE)) |> 
+    arrange(desc(median_anzahl))
+print(avg_f64_diagnoses_per_bundesland_wohnort)
+### In NRW wohnen also in absoluten Zahlen die meisten Leute mit F64 Diagnosen, aber in Bayern werden die meisten Leute mit F64 Diagnosen behandelt. Das ist aber noch nicht auf die Bevölkerung gerechnet. NRW ist das bevölkerungsreichste Bundesland, also heißt das nicht viel.
+avg_f64_diagnoses_per_bundesland_wohnort <- avg_f64_diagnoses_per_bundesland_wohnort |> 
+    left_join(bevölerkung, by="Bundesland") 
+print(avg_f64_diagnoses_per_bundesland_wohnort)
+avg_f64_diagnoses_per_bundesland_wohnort <- avg_f64_diagnoses_per_bundesland_wohnort |>
+    mutate(diagnosen_pro_1mil = (median_anzahl / Bevölkerung) * 1000000) |> 
+    select(-median_anzahl, -Bevölkerung) |> 
+    arrange(desc(diagnosen_pro_1mil)) 
+print(avg_f64_diagnoses_per_bundesland_wohnort)
+write_csv(avg_f64_diagnoses_per_bundesland_wohnort, "avg_f64_diagnoses_per_bundesland_wohnort.csv")
+### Also: In Relation zur Bevölkerung wohnen in Berlin die meisten Leute mit F64 Diagnosen.
+
+# Genital OP Analyse
+## Daten laden und aufbereiten
+genital_ops_nach_behandlungsort <- read_csv2("5-646 nach Behandlungsort.csv", locale = locale(grouping_mark = "."))
+genital_ops_nach_behandlungsort <- genital_ops_nach_behandlungsort |>
+  mutate(across(where(is.character), str_trim)) |>  
+  mutate(Wohnort.Behandlungsort = "Nach Behandlungsort") |> 
+  pivot_longer(
+    cols = -c(Bundesland, Altersgruppen, Geschlecht, Wohnort.Behandlungsort),
+    names_to = "Jahr",
+    values_to = "Anzahl"
+  ) 
+genital_ops_nach_wohnort <- read_csv2("5-646 nach Wohnort.csv", locale = locale(grouping_mark = "."))
+genital_ops_nach_wohnort <- genital_ops_nach_wohnort |>
+  mutate(across(where(is.character), str_trim)) |> 
+  mutate(Wohnort.Behandlungsort = "Nach Wohnort") |> 
+  pivot_longer(
+    cols = -c(Bundesland, Altersgruppen, Geschlecht, Wohnort.Behandlungsort),
+    names_to = "Jahr",
+    values_to = "Anzahl"
+  ) 
+genital_ops_data <- bind_rows(genital_ops_nach_behandlungsort, genital_ops_nach_wohnort) |> 
+    rename(
+        Altersgruppe = Altersgruppen
+    )
+
+## Wie viele Leute kriegen solche genital OPs in Deutschland? 
+deutschland_zahl_genital_ops_pro_jahr <- genital_ops_data |> 
+    filter(Bundesland == "Deutschland") |>
+    filter(Geschlecht == "Alle Geschlechter") |> 
+    filter(Wohnort.Behandlungsort == "Nach Wohnort") |>
     filter(Altersgruppe == "Alle Altersgruppen") |>
     group_by(Jahr) |> 
     select(-Wohnort.Behandlungsort, -Bundesland, -Altersgruppe) |> 
@@ -55,38 +185,53 @@ deutschland_zahl_ops_pro_jahr <- gac_data |>
         names_from = Geschlecht,
         values_from = Anzahl
     ) 
-print(deutschland_zahl_ops_pro_jahr)
-write_csv(deutschland_zahl_ops_pro_jahr, "deutschland_zahl_ops_pro_jahr.csv")
+colnames(deutschland_zahl_genital_ops_pro_jahr)[2] <- "Zahl"
+print(deutschland_zahl_genital_ops_pro_jahr)
+write_csv(deutschland_zahl_genital_ops_pro_jahr, "deutschland_zahl_genital_ops_pro_jahr.csv")
 
-# * Wie sieht es aus pro Bundesland? *
-by_wohnort <- gac_data |> 
-    filter(Wohnort.Behandlungsort == "nach Wohnort") |> 
-    filter(Bundesland != "Alle Orte" & 
-           Bundesland != "Deutschland" & 
-           Bundesland != "keine Angabe" &
-           Bundesland != "Wohnsitz im Ausland")
-
-pro_bundesland_zahl_ops_pro_jahr <- by_wohnort |>
-        filter(Geschlecht != "Alle Geschlechter") |> 
-    filter(Wohnort.Behandlungsort == "nach Wohnort") |>
-    filter(Altersgruppe == "Alle Altersgruppen") |>
-    group_by(Jahr, Bundesland) |> 
-    select(-Wohnort.Behandlungsort, -Altersgruppe) |> 
+## Genital OPs nach Geschlecht
+### Als kleine Notiz: Zwar wird in den Daten zwischen "männlich", "weiblich" und "unbekannt" unterschieden, aber diese werden nach den Daten der Krankenkassen abgerechnet. Das heißt, dass "männlich" nicht notwendig "cis männlich" oder "trans männlich" bedeutet, sondern einfach "als männlich abgerechnet". Genauso bei "weiblich". Daher kann man nicht anhand den Daten sagen, wie viele trans* Männer oder trans* Frauen eine genital OP gemacht haben. Deshalb werde ich nach OPS Kodes differnzieren. Ausführliches zu den OPS Codes ist unter https://www.icd-code.de/ops/code/5-646.html zu finden.
+genital_ops_nach_geschlecht <- read_csv('Destatis Daten GAC.csv')
+genital_ops_nach_geschlecht$Altersgruppe <- str_replace_all(genital_ops_nach_geschlecht$Altersgruppe, 'Insgesamt', 'Alle Altersgruppen')
+genital_ops_nach_geschlecht <- genital_ops_nach_geschlecht %>% 
+    mutate(
+        endziffer = str_sub(`OPS-Kode`, 7, -1)
+    ) |> 
+    mutate(Geschlecht = case_when(
+        endziffer == "0" ~ "trans* Männer",
+        endziffer == "1" ~ "trans* Frauen",
+        endziffer == "x" | endziffer == "y" ~ "Unbekannt"
+    )) |> 
+    select(-endziffer, -`OPS-Kode`)
+print(genital_ops_nach_geschlecht)
+genital_ops_deutschland_alle_altersgruppen_nach_geschlecht <- genital_ops_nach_geschlecht |> 
+    filter(Altersgruppe == "Alle Altersgruppen") |> 
+    select(-Altersgruppe) |> 
+    group_by(Geschlecht, Year) |> 
+    summarize(Wert = sum(Wert, na.rm = TRUE)) |> 
     pivot_wider(
         names_from = Geschlecht,
-        values_from = Anzahl
-    ) 
-print(pro_bundesland_zahl_ops_pro_jahr)
-write_csv(pro_bundesland_zahl_ops_pro_jahr, "pro_bundesland_zahl_ops_pro_jahr.csv")
+        values_from = Wert
+    )
+print(genital_ops_deutschland_alle_altersgruppen_nach_geschlecht)
+write_csv(genital_ops_deutschland_alle_altersgruppen_nach_geschlecht, "genital_ops_deutschland_alle_altersgruppen_nach_geschlecht.csv")
 
-# Für Histogramm - Alter der Person, die OP kriegt
-age_distribution_germany_only <- gac_data |> 
+by_wohnort_genital_ops <- genital_ops_data |> 
+        filter(Wohnort.Behandlungsort == "Nach Wohnort") |> 
+        filter(Bundesland != "Alle Orte" & 
+            Bundesland != "Deutschland" & 
+            Bundesland != "keine Angabe" &
+            Bundesland != "Wohnsitz im Ausland")
+print(by_wohnort_genital_ops)
+
+## Alter der Person, die eine OP kriegt
+age_distribution_genital_ops_germany_only <- genital_ops_data |> 
+    filter(Wohnort.Behandlungsort == "Nach Wohnort") |>
     filter(Bundesland == "Deutschland") |> 
     group_by(Altersgruppe) |> 
     filter(Altersgruppe != "Alle Altersgruppen" &
            Altersgruppe != "Unbekannt") |>
-    filter(Wohnort.Behandlungsort == "nach Wohnort") |>
-    filter(Geschlecht == "Alle Geschlechter") |> 
+    filter(Geschlecht == "Alle Geschlechter")  |> 
     summarize(median_num_surgeries_per_year = median(Anzahl, na.rm = TRUE)) |>
     mutate(Altersgruppe = factor(Altersgruppe, levels = c(
         "Unter 1 Jahr",
@@ -110,54 +255,261 @@ age_distribution_germany_only <- gac_data |>
         "85 bis unter 90 Jahre",
         "90 bis unter 95 Jahre",
         "95 Jahre und älter"
-    ))) |>
-    arrange(Altersgruppe) |> 
+    ))) 
+print(age_distribution_genital_ops_germany_only, n=21)
+sum_surgeries <- sum(age_distribution_genital_ops_germany_only$median_num_surgeries_per_year, na.rm = TRUE)
+print(sum_surgeries)  # Should equal the total median number of surgeries per year
+age_distribution_genital_ops_germany_only <- age_distribution_genital_ops_germany_only |> 
+    mutate(percentage_of_total = round((median_num_surgeries_per_year / sum_surgeries) * 100, 2)) |> 
+    select(-median_num_surgeries_per_year)
+print(age_distribution_genital_ops_germany_only, n=21)
+write_csv(age_distribution_genital_ops_germany_only, "age_distribution_genital_ops_germany_only.csv")
+
+
+age_distribution_genital_ops_germany_only_nach_jahr <- genital_ops_data |> 
+    filter(Wohnort.Behandlungsort == "Nach Wohnort") |>
+    filter(Bundesland == "Deutschland") |> 
+    group_by(Altersgruppe) |> 
+    filter(Altersgruppe != "Alle Altersgruppen" &
+           Altersgruppe != "Unbekannt") |>
+    filter(Geschlecht == "Alle Geschlechter")  |> 
     pivot_wider(
         names_from = Altersgruppe,
-        values_from = median_num_surgeries_per_year
-    )
-print(age_distribution_germany_only)
-write_csv(age_distribution_germany_only, "age_distribution_germany_only.csv")
+        values_from = Anzahl
+    ) |> 
+    select(-Bundesland, -Wohnort.Behandlungsort, -Geschlecht) 
+write_csv(age_distribution_genital_ops_germany_only_nach_jahr, "age_distribution_genital_ops_germany_only_nach_jahr.csv")
+age_distribution_genital_ops_germany_only_nach_jahr_simplified <- age_distribution_genital_ops_germany_only_nach_jahr |>
+    mutate(
+        '0-10 Jährige' = rowSums(across(c(
+            'Unter 1 Jahr',
+            '1 Jahr bis unter 5 Jahre',
+            '5 bis unter 10 Jahre'
+        )), na.rm = TRUE),
+        '10-20 Jährige' = rowSums(across(c(
+            '10 bis unter 15 Jahre',
+            '15 bis unter 20 Jahre'
+        )), na.rm = TRUE),  
+        '20-30 Jährige' = rowSums(across(c(
+            '20 bis unter 25 Jahre',
+            '25 bis unter 30 Jahre'
+        )), na.rm = TRUE), 
+        '30-40 Jährige' = rowSums(across(c(
+            '30 bis unter 35 Jahre',
+            '35 bis unter 40 Jahre'
+        )), na.rm = TRUE),
+        '40-50 Jährige' = rowSums(across(c(
+            '40 bis unter 45 Jahre',
+            '45 bis unter 50 Jahre'
+        )), na.rm = TRUE),
+        '50-60 Jährige' = rowSums(across(c(
+            '50 bis unter 55 Jahre',
+            '55 bis unter 60 Jahre'
+        )), na.rm = TRUE),
+        '60-70 Jährige' = rowSums(across(c(
+            '60 bis unter 65 Jahre',
+            '65 bis unter 70 Jahre'
+        )), na.rm = TRUE),
+        '70-80 Jährige' = rowSums(across(c(
+            '70 bis unter 75 Jahre',
+            '75 bis unter 80 Jahre'
+        )), na.rm = TRUE),
+       '80-90 Jährige' = rowSums(across(c(
+            '80 bis unter 85 Jahre',
+            '85 bis unter 90 Jahre'
+        )), na.rm = TRUE),
+        '90 und ältere' = rowSums(across(c(
+            '90 bis unter 95 Jahre',
+            '95 Jahre und älter'
+        )), na.rm = TRUE)
+    ) |> 
+    select(
+        Jahr,
+        '0-10 Jährige',
+        '10-20 Jährige',
+        '20-30 Jährige',
+        '30-40 Jährige',
+        '40-50 Jährige',
+        '50-60 Jährige',
+        '60-70 Jährige',
+        '70-80 Jährige',
+        '80-90 Jährige',
+        '90 und ältere'
+    ) 
+print(age_distribution_genital_ops_germany_only_nach_jahr, n=21)
+write_csv(age_distribution_genital_ops_germany_only_nach_jahr_simplified, "age_distribution_genital_ops_germany_only_nach_jahr_simplified.csv")
 
-age_distribution_per_bundesland <- by_wohnort |> 
+## Nach Wohnort
+age_distribution_genital_ops_per_bundesland <- by_wohnort_genital_ops |> 
     filter(Altersgruppe != "Alle Altersgruppen" &
            Altersgruppe != "Unbekannt") |> 
-    filter(Geschlecht == "Alle Geschlechter") |>
+    filter(Geschlecht == "Alle Geschlechter")  |>
     group_by(Bundesland, Altersgruppe) |>
-    summarize(median_num_surgeries_per_year = median(Anzahl, na.rm = TRUE)) |> 
-    mutate(Altersgruppe = factor(Altersgruppe, levels = c(
-        "Unter 1 Jahr",
-        "1 Jahr bis unter 5 Jahre",
-        "5 bis unter 10 Jahre",
-        "10 bis unter 15 Jahre",
-        "15 bis unter 20 Jahre",
-        "20 bis unter 25 Jahre",
-        "25 bis unter 30 Jahre",
-        "30 bis unter 35 Jahre",
-        "35 bis unter 40 Jahre",
-        "40 bis unter 45 Jahre",
-        "45 bis unter 50 Jahre",
-        "50 bis unter 55 Jahre",
-        "55 bis unter 60 Jahre",
-        "60 bis unter 65 Jahre",
-        "65 bis unter 70 Jahre",
-        "70 bis unter 75 Jahre",
-        "75 bis unter 80 Jahre",
-        "80 bis unter 85 Jahre",
-        "85 bis unter 90 Jahre",
-        "90 bis unter 95 Jahre",
-        "95 Jahre und älter"
-    ))) |> 
-    arrange(Altersgruppe) |>
+    summarize(median_num_surgeries_per_year = median(Anzahl, na.rm = TRUE)) 
+sum_surgeries_per_bundesland <- age_distribution_genital_ops_per_bundesland |> 
+    group_by(Bundesland) |> 
+    summarize(sum_surgeries_per_bundesland = sum(median_num_surgeries_per_year, na.rm = TRUE))
+print(sum_surgeries_per_bundesland)
+bundesländer <- unique(age_distribution_genital_ops_per_bundesland$Bundesland)
+age_distribution_genital_ops_per_bundesland <- age_distribution_genital_ops_per_bundesland |> 
+    left_join(sum_surgeries_per_bundesland, by="Bundesland") |> 
+    mutate(percentage_of_total = round((median_num_surgeries_per_year / sum_surgeries_per_bundesland) * 100, 2)) |> 
+    select(-sum_surgeries_per_bundesland, -median_num_surgeries_per_year)
+print(age_distribution_genital_ops_per_bundesland)
+write_csv(age_distribution_genital_ops_per_bundesland, "age_distribution_genital_ops_per_bundesland.csv")
+age_distribution_genital_ops_per_bundesland_wider <- age_distribution_genital_ops_per_bundesland |> 
     pivot_wider(
-        names_from = Altersgruppe,
-        values_from = median_num_surgeries_per_year
-    ) 
-print(age_distribution_per_bundesland)
-write_csv(age_distribution_per_bundesland, "age_distribution_per_bundesland.csv")
+        names_from = Bundesland,
+        values_from = percentage_of_total
+    )
+print(age_distribution_genital_ops_per_bundesland_wider, n=21)
+write_csv(age_distribution_genital_ops_per_bundesland_wider, "age_distribution_genital_ops_per_bundesland_wider.csv")
 
-# Laut Median gab es keine GAC OPs bei Kindern unter 5 Jahren in Deutschland. Das liegt daran, wie das Median kalkuliert wird. Aber es gibt ein paar Fälle davon, weswegen es 2021 verboten wurde. Wie viele Fälle gab es denn?
-unter_5_Jahren_gac_surgeries <- gac_data |> 
+pro_bundesland_wohnort_geschlecht_jahr_zahl_genital_ops <- by_wohnort_genital_ops |>
+    filter(Geschlecht != "Alle Geschlechter")  |> 
+    filter(Altersgruppe == "Alle Altersgruppen") |>
+    group_by(Jahr, Bundesland) |> 
+    select(-Wohnort.Behandlungsort, -Altersgruppe) |> 
+    pivot_wider(
+        names_from = Geschlecht,
+        values_from = Anzahl
+    ) 
+print(pro_bundesland_wohnort_geschlecht_jahr_zahl_genital_ops)
+write_csv(pro_bundesland_wohnort_geschlecht_jahr_zahl_genital_ops, "pro_bundesland_wohnort_geschlecht_jahr_zahl_genital_ops.csv")
+
+pro_bundesland_wohnort_genital_ops <- by_wohnort_genital_ops |>
+    filter(Geschlecht == "Alle Geschlechter") |> 
+    filter(Altersgruppe == "Alle Altersgruppen") |>
+    group_by(Bundesland) |> 
+    summarize(median_anzahl = median(Anzahl, na.rm = TRUE))
+print(pro_bundesland_wohnort_genital_ops)
+
+### Bevölkerung pro Bundesland für Rate pro 1 Million Einwohner:in
+bundesländer_avg_genital_ops <- merge(pro_bundesland_wohnort_genital_ops, bevölerkung, by="Bundesland") 
+print(bundesländer_avg_genital_ops)
+
+#### So viele Genital OPs gab es pro 1 Million Einwohner:in
+bundesländer_avg_genital_ops <- bundesländer_avg_genital_ops |> 
+    mutate(surgeries_per_1mil = (median_anzahl / Bevölkerung) * 1000000) |> 
+    arrange(desc(surgeries_per_1mil))
+print(bundesländer_avg_genital_ops)
+
+bundesländer_avg_genital_ops <- bundesländer_avg_genital_ops |> 
+    select(-median_anzahl, -Bevölkerung) |> 
+    mutate(surgeries_per_1mil = round(surgeries_per_1mil, 2))  
+print(bundesländer_avg_genital_ops)
+write_csv(bundesländer_avg_genital_ops, "bundesländer_avg_genital_ops.csv")
+##### In Berlin wohnen die meisten Menschen, die eine genital OP haben machen lassen. Es ist kein perfekter Zusammenhang, weil Menschen manche OPs zwei oder mehr Mal machen lassen. Das sind aber die besten Daten, die wir haben. Übringens: Dieser Trend ist auch bei den Transsexualismus Diagnosen so.
+#### Wie hat sich das über die Jahre entwickelt?
+avg_num_genital_ops_per_year_alle_geschlechter_altersgruppen <- by_wohnort_genital_ops |> 
+    filter(Geschlecht == "Alle Geschlechter")  |> 
+    filter(Altersgruppe == "Alle Altersgruppen") |>
+    group_by(Bundesland, Jahr) 
+print(avg_num_genital_ops_per_year_alle_geschlechter_altersgruppen)
+
+bundesländer_avg_genital_ops_with_year <- merge(avg_num_genital_ops_per_year_alle_geschlechter_altersgruppen, bevölerkung, by="Bundesland") |> 
+    group_by(Bundesland) |> 
+    mutate(surgeries_per_1mil = (Anzahl / Bevölkerung) * 1000000) |> 
+    arrange(desc(surgeries_per_1mil)) |> 
+    select(-Anzahl, -Bevölkerung) |> 
+    mutate(surgeries_per_1mil = round(surgeries_per_1mil, 2)) |> 
+    arrange(desc(Jahr)) 
+print(bundesländer_avg_genital_ops_with_year)
+
+bundesländer_avg_genital_ops_with_year_top_2 <- bundesländer_avg_genital_ops_with_year |>
+    group_by(Jahr) |>
+    slice_head(n = 2) |>
+    arrange(desc(Jahr)) |>
+    ungroup() 
+print(bundesländer_avg_genital_ops_with_year_top_2, n=40)
+##### Berlin ist seit 2011 durchgängig auf Platz 1. 2010 war es auf Platz 2, 2009 auf Platz 1. 2006-2009 und 2011 war es auf Platz 2. Die anderen Bundesländer in den Top 2 sind Brandenburg (2020-2024), Bremen (2015-2019, 2010-2013 - 2010 was es sogar auf Platz 1), Bayern (2014), Saarland (2005, 2008-2009)
+### Ist Berlin für alle Geschlechter on top?
+avg_num_genital_ops_per_year_nach_geschlecht_alle_altersgruppen <- by_wohnort_genital_ops |> 
+    filter(Geschlecht != "Alle Geschlechter" & Geschlecht != "Unbekannt")  |> 
+    filter(Altersgruppe == "Alle Altersgruppen") |>
+    group_by(Bundesland, Jahr, Geschlecht) |> 
+    summarize(median_anzahl = median(Anzahl, na.rm = TRUE)) |> 
+    arrange(desc(Jahr)) 
+print(avg_num_genital_ops_per_year_nach_geschlecht_alle_altersgruppen)
+
+bundesländer_avg_genital_ops_mit_geschlecht_with_year <- merge(avg_num_genital_ops_per_year_nach_geschlecht_alle_altersgruppen, bevölerkung, by="Bundesland") |> 
+    group_by(Bundesland, Geschlecht) |> 
+    mutate(surgeries_per_1mil = (median_anzahl / Bevölkerung) * 1000000) |> 
+    arrange(desc(surgeries_per_1mil)) |> 
+    select(-median_anzahl, -Bevölkerung) |> 
+    mutate(surgeries_per_1mil = round(surgeries_per_1mil, 2)) |> 
+    arrange(desc(Jahr)) 
+print(bundesländer_avg_genital_ops_mit_geschlecht_with_year)
+write_csv(bundesländer_avg_genital_ops_mit_geschlecht_with_year, "bundesländer_avg_genital_ops_mit_geschlecht_with_year.csv")
+
+bundesländer_avg_genital_ops_with_year_gender_top_2 <- bundesländer_avg_genital_ops_mit_geschlecht_with_year |>
+    group_by(Jahr, Bundesland) |>
+    arrange(desc(surgeries_per_1mil)) |>
+    group_by(Jahr, Geschlecht) |>
+    slice_head(n = 2)  |> 
+    arrange(desc(Jahr))
+view(bundesländer_avg_genital_ops_with_year_gender_top_2)
+#### Männlich: Im Normallfall ist Berlin auf Platz 1, durchgängig seit 2018. Bremen oder Brandenburg waren normalerweise auf Platz 2.
+#### Berlin: 2009-2011, 2014, 2018-2024 war Berlin für Männlich auf Platz 1. 2006, 2015 - 2016 Platz 2. 
+#### Brandenburg: 2020-2024 war Brandenburg auf Platz 2. 
+#### Bremen: 2012-2013, 2015-2016 war Bremen auf Platz 1. 2018 und 2019 war Bremen auf Platz 2.
+### Weiblich: Berlin ist fast immer in den Top 2, seit 2023 auf Platz 1.
+
+bundesland_counts <- bundesländer_avg_genital_ops_with_year_gender_top_2 |>
+    ungroup() |> 
+    count(Bundesland) |> 
+    arrange(desc(n))
+print(bundesland_counts)
+#### Berlin und Brandenburg sind normalerweise in den Top 2. In ein paar anderen Jahren sind auch andere Bundesländer vertreten, 
+
+## Nach Behandlungsort
+by_behandlungsort_genital_ops <- genital_ops_data |> 
+    filter(Wohnort.Behandlungsort == "Nach Behandlungsort") |> 
+    filter(Bundesland != "Wohnsitz im Ausland" &
+           Bundesland != "keine Angabe" &
+           Bundesland != "Alle Orte")
+
+genital_ops_deutschland_jahr_behandlungsort_nach_geschlecht <- by_behandlungsort_genital_ops |> 
+    filter(Bundesland == "Deutschland") |> 
+    filter(Geschlecht != regex("Alle Geschlechter", ignore_case=TRUE)) |> 
+    filter(Altersgruppe == regex("Alle Altersgruppen", ignore_case=TRUE)) 
+print(genital_ops_deutschland_jahr_behandlungsort_nach_geschlecht)
+write_csv(genital_ops_deutschland_jahr_behandlungsort_nach_geschlecht, "genital_ops_deutschland_jahr_behandlungsort_nach_geschlecht.csv")
+
+by_behandlungsort_genital_ops_age_average <- by_behandlungsort_genital_ops |> 
+    filter(Altersgruppe != "Alle Altersgruppen" &
+           Altersgruppe != "Unbekannt") |> 
+    filter(Geschlecht != "Alle Geschlechter" &
+           Geschlecht != "Unbekannt") |>
+    select(-Wohnort.Behandlungsort) 
+print(by_behandlungsort_genital_ops_age_average)
+write_csv(by_behandlungsort_genital_ops_age_average, "by_behandlungsort_genital_ops_age.csv")
+
+avg_genital_ops_performed_per_bundesland <- by_behandlungsort_genital_ops_age_average |>
+    filter(Bundesland != "Deutschland") |>
+    group_by(Bundesland) |> 
+    summarize(num_genital_ops = sum(Anzahl, na.rm = TRUE)) |> 
+    arrange(desc(num_genital_ops))
+print(avg_genital_ops_performed_per_bundesland)
+
+### In Bayern werden am meisten geschlechtsangleichende OPs durchgeführt. 
+### Seit wann werden in Bayern die meisten GA-OPs gemacht?
+
+genital_ops_pro_bundesland_jahr <- by_behandlungsort_genital_ops_age_average |> 
+    filter(Bundesland != "Deutschland") |>
+    group_by(Bundesland, Jahr) |> 
+    summarize(num_genital_ops = sum(Anzahl, na.rm = TRUE)) |> 
+    group_by(Jahr) |> 
+    arrange(desc(num_genital_ops))
+top2_genital_ops_pro_bundesland_jahr <- genital_ops_pro_bundesland_jahr |>
+    group_by(Jahr) |>
+    slice_head(n = 2) |>
+    arrange(desc(Jahr))
+view(top2_genital_ops_pro_bundesland_jahr)
+#### Seit 2006 ist Bayern auf Platz 1 der Orte, wo Genital OPs durchgeführt werden. Nur 2005 war es auf Platz 2.
+
+## 2021 trat ein Gesetz in Kraft, dass geschlechtsangleichende Operationen bei Kindern mit "Varianten der Geschlechtsentwicklung" -- also inter* Kinder -- verbietet, bis sie selber zustimmen können. Wie groß war das Problem? 
+unter_5_Jahren_genital_ops <- genital_ops_data |> 
     filter(str_detect(Altersgruppe, regex("Unter 1 Jahr", ignore_case = TRUE)) | str_detect(Altersgruppe, regex("1 Jahr bis unter 5 Jahre", ignore_case = TRUE))) |> 
     filter(Geschlecht != "Alle Geschlechter" &
            Geschlecht != "Unbekannt") |>
@@ -167,146 +519,61 @@ unter_5_Jahren_gac_surgeries <- gac_data |>
     mutate(Altersgruppe = factor(Altersgruppe, levels = c(
         "Unter 1 Jahr",
         "1 Jahr bis unter 5 Jahre")))
-view(unter_5_Jahren_gac_surgeries)
-# Logisch: Alle 5 solcher Eingriffe wurden vor 2021 gemacht. 
-write_csv(unter_5_Jahren_gac_surgeries, "unter_5_Jahren_gac_surgeries.csv")
+view(unter_5_Jahren_genital_ops)
+### Logisch: Alle 5 solcher Eingriffe wurden vor 2021 gemacht. 
+### Hießt: 4 Mal wurde den Krankenkassen eine Genital OP in Rechnung gestellt. Nicht gerade viel.
+write_csv(unter_5_Jahren_genital_ops, "unter_5_Jahren_genital_ops.csv")
 
-# Unter 18 GA-OPs
-unter_20_Jahren_gac_surgeries <- gac_data |>
-    filter(str_detect(Altersgruppe, regex("Unter 1 Jahr", ignore_case = TRUE)) | 
-           str_detect(Altersgruppe, regex("1 Jahr bis unter 5 Jahre", ignore_case = TRUE)) |
-           str_detect(Altersgruppe, regex("5 bis unter 10 Jahre", ignore_case = TRUE)) |
-           str_detect(Altersgruppe, regex("10 bis unter 15 Jahre", ignore_case = TRUE)) |
-           str_detect(Altersgruppe, regex("15 bis unter 20 Jahre", ignore_case = TRUE))) |> 
-    filter(Geschlecht != "Alle Geschlechter" &
-           Geschlecht != "Unbekannt") |>
-    filter(Bundesland == "Alle Orte") |> 
-    filter(Wohnort.Behandlungsort == "nach Wohnort") |>
-    filter(Anzahl > 0) |> 
+## Wie viele Minderjährige haben so eine Genital-OP bekommen?
+auswertung_minderjährige_genital_ops <- read_csv('u18.csv')
+unter_18_Jahren_genital_ops <- auswertung_minderjährige_genital_ops |>
+    mutate(Zahl = as.numeric(Zahl)) |>
+    filter(Altersgruppe == "0-17 Jahre") |> 
+    filter(Geschlecht == regex("insgesamt", ignore_case = TRUE)) |>
+    select(-Geschlecht, -Altersgruppe) 
+print(unter_18_Jahren_genital_ops)
+### Es ist durchaus passiert, aber nicht oft. Der Trend ist aber deutlich nach oben.
+for_export_u18_genital_ops <- unter_18_Jahren_genital_ops |> 
+    pivot_wider(
+        names_from = Jahr,
+        values_from = Zahl
+    )
+write_csv(for_export_u18_genital_ops, "unter_18_Jahren_genital_ops.csv")
+
+#### Wenn man das mit der Gesamtzahl von Kindern unter 18 in Deutschland vergleicht, ist das viel?
+unter_18_population <- read_csv("Population nach Alter.csv") |> 
+    rename(Geschlecht = Attribute)
+unter_18_population <- unter_18_population |> 
+    filter(Altersgruppe == "unter 1 Jahr" | Altersgruppe == "1" | Altersgruppe == "2" | Altersgruppe == "3" | Altersgruppe == "4" | Altersgruppe == "5" | Altersgruppe == "6" | Altersgruppe == "7" | Altersgruppe == "8" | Altersgruppe == "9" | Altersgruppe == "10" | Altersgruppe == "11" | Altersgruppe == "12" | Altersgruppe == "13" | Altersgruppe == "14" | Altersgruppe == "15" | Altersgruppe == "16" | Altersgruppe == "17") |> 
+    filter(Geschlecht == "Insgesamt") 
+unter_18_population_nums <- unter_18_population |>
     group_by(Jahr) |> 
-    summarize(Anzahl = sum(Anzahl, na.rm = TRUE)) 
-view(unter_20_Jahren_gac_surgeries)
-# Note: Nicht alle OPs sind wirklich von unter-18 Jährigen, da die 15-20 Jahre Altersgruppe sowohl Minderjährige als auch Volljährige enthält. Mal ohne 15-20 Jährige gerechnet:
-unter_15_Jahren_gac_surgeries <- gac_data |>
-    filter(str_detect(Altersgruppe, regex("Unter 1 Jahr", ignore_case = TRUE)) | 
-           str_detect(Altersgruppe, regex("1 Jahr bis unter 5 Jahre", ignore_case = TRUE)) |
-           str_detect(Altersgruppe, regex("5 bis unter 10 Jahre", ignore_case = TRUE)) |
-           str_detect(Altersgruppe, regex("10 bis unter 15 Jahre", ignore_case = TRUE))) |> 
-    filter(Geschlecht != "Alle Geschlechter" &
-           Geschlecht != "Unbekannt") |>
-    filter(Bundesland == "Alle Orte") |> 
-    filter(Wohnort.Behandlungsort == "nach Wohnort") |>
-    filter(Anzahl > 0) |> 
-    group_by(Jahr) |> 
-    summarize(Anzahl = sum(Anzahl, na.rm = TRUE)) |> 
-    view()
+    summarize(Bevölkerung_unter_18 = sum(Value, na.rm = TRUE)) 
+unter_18_Jahren_genital_ops_mit_population <- unter_18_Jahren_genital_ops |> 
+    merge(unter_18_population_nums, by="Jahr") |> 
+    mutate(ops_per_100k = round((Zahl / Bevölkerung_unter_18) * 100000, digits=1)) |> 
+    print()
+##### Höchtestens 0.3 OPs pro 100.000 Kinder unter 18 Jahren in Deutschland.
 
-# Pro Bundesland
-by_wohnort_bundesland_average <- by_wohnort |>
-    filter(Geschlecht == "Alle Geschlechter") |> 
-    filter(Altersgruppe == "Alle Altersgruppen") |>
-    group_by(Bundesland) |> 
-    summarize(median_anzahl = median(Anzahl, na.rm = TRUE)) 
-print(by_wohnort_bundesland_average) # not yet per 100k people - don't read too much into this
-
-if (Sys.info()["sysname"] == "Darwin") {  # Darwin is the OS name for Mac
-    population <- read_csv("pop bundesländer.csv")
-} else if (Sys.info()["sysname"] == "Windows") {
-
-} else {
-    print("Operating system not recognized")
-}
-
-population <- population |> 
-    rename(Bundesland = 'Vorspalte-ind1') |> 
-    rename(Bevölkerung = right) |> 
-    mutate(Bevölkerung = as.numeric(Bevölkerung))
-
-bundesländer_avg_gac_surgeries <- merge(by_wohnort_bundesland_average, population, by="Bundesland") 
-print(bundesländer_avg_gac_surgeries)
-
-bundesländer_avg_gac_surgeries <- bundesländer_avg_gac_surgeries |> 
-    mutate(surgeries_per_1mil = (median_anzahl / Bevölkerung) * 1000000) |> 
-    arrange(desc(surgeries_per_1mil))
-print(bundesländer_avg_gac_surgeries)
-
-bundesländer_avg_gac_surgeries <- bundesländer_avg_gac_surgeries |> 
-    select(median_anzahl, -Bevölkerung) |> 
-    mutate(surgeries_per_1mil = round(surgeries_per_1mil, 2)) 
-write_csv(bundesländer_avg_gac_surgeries, "bundesländer_avg_gac_surgeries.csv")
-
-# * Analysis by Wohnort, per year (residence) *
-avg_num_gac_surgeries_per_year <- age_distribution_per_bundesland |> 
-    group_by(Bundesland, Jahr) |> 
-    summarize(median_anzahl = median(Anzahl, na.rm = TRUE)) 
-
-bundesländer_avg_gac_surgeries_with_year <- merge(avg_num_gac_surgeries_per_year, population, by="Bundesland") |> 
-    group_by(Bundesland) |> 
-    mutate(surgeries_per_100k = (median_anzahl / Bevölkerung) * 100000) |> 
-    arrange(desc(surgeries_per_100k)) |> 
-    select(-median_anzahl, -Bevölkerung) |> 
-    mutate(surgeries_per_100k = round(surgeries_per_100k, 2)) 
-
-bundesländer_avg_gac_surgeries_with_year <- bundesländer_avg_gac_surgeries_with_year |> 
-    arrange(desc(Jahr)) 
-
-bundesländer_avg_gac_surgeries_with_year_top_2 <- bundesländer_avg_gac_surgeries_with_year |>
-    group_by(Jahr) |>
-    slice_head(n = 2) |>
-    arrange(desc(Jahr)) |>
-    ungroup() |> 
-    view()
-
-
-# * Analysis by Behandlungsort * 
-by_behandlungsort <- gac_data |> 
-    filter(Wohnort.Behandlungsort == "nach Behandlungsort") |> 
-    filter(Bundesland != "Alle Orte" & 
-           Bundesland != "Deutschland" & 
-           Bundesland != "keine Angabe" &
-           Bundesland != "Wohnsitz im Ausland") 
-unique(by_behandlungsort$Bundesland)
-by_behandlungsort_age_average <- by_behandlungsort |> 
-    filter(Altersgruppe != "Alle Altersgruppen" &
-           Altersgruppe != "Unbekannt") |> 
-    filter(Geschlecht != "Alle Geschlechter" &
-           Geschlecht != "Unbekannt") |>
-    select(-Wohnort.Behandlungsort) 
-print(by_behandlungsort_age_average)
-write_csv(by_behandlungsort_age_average, "by_behandlungsort_age.csv")
-
-avg_gac_surgiers_performed_per_bundesland <- by_behandlungsort_age_average |>
-    group_by(Bundesland) |> 
-    summarize(median_anzahl = median(Anzahl, na.rm = TRUE)) |> 
-    arrange(desc(median_anzahl))
-
-print(avg_gac_surgiers_performed_per_bundesland)
-# In Bayern werden durchscnittlich am meisten geschlechtsangleichende OPs durchgeführt.
-
-# Aber seit wann ist das so?
-
-gac_surgeries_pro_bundesland <- by_behandlungsort_age_average |> 
-# HIER WEITERMACHEN
-
-# Vertelung nach Altersgruppe 2024
-gac_data_2024_age_germany_only <- gac_data |> 
+## Vertelung nach Altersgruppe 2024
+genital_ops_data_2024_age_germany_only <- genital_ops_data |> 
     filter(Jahr == 2024) |> 
     filter(Wohnort.Behandlungsort == "nach Wohnort") |>
     filter(Bundesland == "Deutschland") |>
-    filter(Geschlecht == "Alle Geschlechter") |>
+    filter(Geschlecht == regex("insgesamt", ignore_case=TRUE))  |>
     filter(Altersgruppe != "Alle Altersgruppen" &
            Altersgruppe != "Unbekannt") |>
     select(-Wohnort.Behandlungsort, -Bundesland, -Geschlecht, -Jahr) |> 
     view()
-write_csv(gac_data_2024_age_germany_only, "gac_data_2024_age_germany_only.csv")
+write_csv(genital_ops_data_2024_age_germany_only, "genital_ops_data_2024_age_germany_only.csv")
 
-# Wie viele OPs gab es, die als "Sonstige" oder "Nicht näher bezeichnet" klassifiziert wurden?
-gac_data_unknown_types <- read_csv('Destatis Daten GAC.csv')
+## Wie viele OPs gab es, die als "Sonstige" oder "Nicht näher bezeichnet" klassifiziert wurden?
+genital_ops_data_unknown_types <- read_csv('Destatis Daten GAC.csv')
 library(janitor)
-gac_data_unknown_types <- gac_data_unknown_types |>
+genital_ops_data_unknown_types <- genital_ops_data_unknown_types |>
     clean_names() 
 
-gac_data_unknown_types_insgesamt <- gac_data_unknown_types |> 
+genital_ops_data_unknown_types_insgesamt <- genital_ops_data_unknown_types |> 
     filter(altersgruppe == "Insgesamt") |>
     filter(str_detect(ops_kode, "x") | str_detect(ops_kode, "y")) |> 
     select(-altersgruppe) |> 
@@ -314,6 +581,138 @@ gac_data_unknown_types_insgesamt <- gac_data_unknown_types |>
         names_from = 'ops_kode',
         values_from = wert
     ) 
-print(gac_data_unknown_types_insgesamt)
+print(genital_ops_data_unknown_types_insgesamt)
 
-write_csv(gac_data_unknown_types_insgesamt, "gac_data_unknown_types_insgesamt.csv")
+write_csv(genital_ops_data_unknown_types_insgesamt, "genital_ops_data_unknown_types_insgesamt.csv")
+
+
+# Im Vergleich zu F64 Diagnosen, wie viele genital OPs gibt es?
+genital_ops_f64_comparison <- deutschland_zahl_genital_ops_pro_jahr |> 
+    full_join(deutschland_zahl_f64_pro_jahr, by = "Jahr", suffix = c("_genital_ops", "_f64")) |> 
+     select(-Geschlecht) 
+print(genital_ops_f64_comparison)
+write_csv(genital_ops_f64_comparison, "genital_ops_f64_comparison.csv")
+
+
+# Kliniken, die Behandlungen für trans* Menschen anbieten
+f64_kliniken <- read_csv("klinikfuehrer F64.csv") |> 
+    rename('Bettenanzahl' = 'Bettananzahl') |> 
+    mutate(
+    Name = str_squish(Name),
+    Addresse = str_squish(Addresse),
+    Bettenanzahl = as.numeric(Bettenanzahl)
+  )
+print(f64_kliniken)
+genital_mzf_kliniken <- read_csv("klinikfuehrer 5-646.0.csv") |> 
+    mutate(
+    Name = str_squish(Name),
+    Addresse = str_squish(Addresse),
+    Bettenanzahl = as.numeric(Bettenanzahl)
+  )
+print(genital_mzf_kliniken)
+
+genital_fzm_kliniken <- read_csv("klinikfuehrer 5-646.1.csv") |> 
+    rename('Name' = 'Klinikname') |> 
+    mutate(
+    Name = str_squish(Name),
+    Addresse = str_squish(Addresse),
+    Bettenanzahl = as.numeric(Bettenanzahl)
+  )
+
+  
+alle_genital_ops_kliniken <- full_join(genital_mzf_kliniken, genital_fzm_kliniken, by = c('Name', 'Bettenanzahl', 'Addresse',  'Stationäre Fälle insgesamt' ), suffix = c(' 5-646.0', ' 5-646.1')) |> 
+    mutate(
+        'Fallzahl NUM 5-646.0' = as.numeric(`Fallzahl 5-646.0`),
+        'Fallzahl NUM 5-646.1' = as.numeric(`Fallzahl 5-646.1`)
+    ) |>
+    mutate(across(matches("^Fallzahl"), ~ if_else(is.na(.x), "0", as.character(.x)))) |> 
+    mutate(across(matches("^Fallzahl NUM"), ~ if_else(is.na(.x), "0", as.character(.x)))) |> 
+    relocate(`Fallzahl 5-646.1`, .after = `Fallzahl 5-646.0`) |> 
+    mutate(
+        'Fahllzahl_genital_ops' = across(c(`Fallzahl NUM 5-646.0`, `Fallzahl NUM 5-646.1`), ~ as.integer(.x)) |> 
+            rowSums() # Diese Spalte addiert die Fallzahlen der beiden OPS Codes zusammen, damit man später in Datawrapper nach größe die Punkte auf der Karte darstellen kann.
+    ) |> 
+    mutate(
+    Fahllzahl_genital_ops = as.integer(Fahllzahl_genital_ops),
+    Fahllzahl_genital_ops = if_else(Fahllzahl_genital_ops == 0L, 1L, Fahllzahl_genital_ops) # Wenn das nicht gemacht wird, werden Kliniken mit 0 Fallzahlen auf der Datawrapper Karte nicht angezeigt. Diese Spalte wird nur für die Größenmessung genutzt, also ist es relativ egal, ob es 1, 2, oder 3 Fälle sind. Alle Kliniken mit 0 Fällen werden dann auf der Karte gleich groß (winzig) sein.
+    ) |> 
+    select(-c(`Fallzahl NUM 5-646.0`, `Fallzahl NUM 5-646.1`)) 
+
+print(alle_genital_ops_kliniken$Fahllzahl_genital_ops)
+write_csv(alle_genital_ops_kliniken, "kliniken_genital_ops.csv")
+
+alle_kliniken <- f64_kliniken |> 
+    full_join(genital_mzf_kliniken, by = c('Name', 'Bettenanzahl', 'Addresse',  'Stationäre Fälle insgesamt' )) |> 
+    full_join(genital_fzm_kliniken, by = c('Name', 'Bettenanzahl', 'Addresse',  'Stationäre Fälle insgesamt' )) |> 
+    mutate(across(matches("^Fallzahl"), ~ if_else(is.na(.x), "0", as.character(.x)))) |>
+    relocate(c('Fallzahl 5-646.0', 'Fallzahl 5-646.1'), .after='Fallzahl F64') |> 
+    mutate(Lat = "") |> 
+    mutate(Long = "") |> 
+    relocate(c('Lat', 'Long'), .after='Addresse')
+print(alle_kliniken)
+write_csv(alle_kliniken, "kliniken_f64_und_genital_ops.csv")
+
+# Wie viele trans* Menschen gibt es in Deutschland und wie viele machen eine OP?
+deutschland_bevölkerung <- read_csv('Bevölkerung 2000-2024.csv') |> 
+    mutate(Jahr = str_remove(Jahr, "^31\\.12\\."))
+## Deutschland Bevölkerung 2021
+jahr_2019_bevölkerung <- deutschland_bevölkerung |>
+  filter(Jahr == "2019") |> 
+  select(Anzahl)
+jahr_2019_bevölkerung <- as.integer(jahr_2019_bevölkerung)
+## Bevöklerung 2024
+jahr_2024_bevölkerung <- deutschland_bevölkerung |>
+  filter(Jahr == "2024") |> 
+  select(Anzahl)
+jahr_2024_bevölkerung <- as.integer(jahr_2024_bevölkerung)
+
+change_pop <- jahr_2024_bevölkerung - jahr_2019_bevölkerung
+print(change_pop)
+change_pop_percent <- (jahr_2024_bevölkerung / jahr_2021_bevölkerung) 
+print(change_pop_percent)
+
+# So viele F64 Diagnosen gab es bei den 15-74 Jährigen in Deutschland insgesamt - Destatis konnte keine Daten für genau die Bevölkerungsgruppe 16-74, also nehme ich das nächstbeste, 15-74. 
+# Kurz zur Info: Die Daten reflektieren nur die Hauptdiagnose. Wenn jemand z.B. für ein gebrochenes Bein ins Krankenhaus geht, aber auch Transsexualismus hat, wird nur das gebrochene Bein als Hauptdiagnose gezählt.
+f64_nur_insgesamt_2000_2024 <- read_csv('F64 2000-2024 Insgesamt only.csv', locale = my_locale) |> 
+    mutate(
+        'unter 1 Jahr' = as.numeric(`unter 1 Jahr`),
+        '1 bis unter 5 Jahre' = as.numeric(`1 bis unter 5 Jahre`),
+        '5 bis unter 10 Jahre' = as.numeric(`5 bis unter 10 Jahre`),
+        '10 bis unter 15 Jahre' = as.numeric(`10 bis unter 15 Jahre`),
+        '15 bis unter 18 Jahre' = as.numeric(`15 bis unter 18 Jahre`),
+        '18 bis unter 20 Jahre' = as.numeric(`18 bis unter 20 Jahre`),
+        '20 bis unter 25 Jahre' = as.numeric(`20 bis unter 25 Jahre`),
+        '25 bis unter 30 Jahre' = as.numeric(`25 bis unter 30 Jahre`),
+        '30 bis unter 35 Jahre' = as.numeric(`30 bis unter 35 Jahre`),
+        '35 bis unter 40 Jahre' = as.numeric(`35 bis unter 40 Jahre`),
+        '40 bis unter 45 Jahre' = as.numeric(`40 bis unter 45 Jahre`),
+        '45 bis unter 50 Jahre' = as.numeric(`45 bis unter 50 Jahre`),
+        '50 bis unter 55 Jahre' = as.numeric(`50 bis unter 55 Jahre`),
+        '55 bis unter 60 Jahre' = as.numeric(`55 bis unter 60 Jahre`),
+        '60 bis unter 65 Jahre' = as.numeric(`60 bis unter 65 Jahre`),
+        '65 bis unter 70 Jahre' = as.numeric(`65 bis unter 70 Jahre`),
+        '70 bis unter 75 Jahre' = as.numeric(`70 bis unter 75 Jahre`),
+        '75 bis unter 80 Jahre' = as.numeric(`75 bis unter 80 Jahre`),
+        '80 bis unter 85 Jahre' = as.numeric(`80 bis unter 85 Jahre`),
+        '85 bis unter 90 Jahre' = as.numeric(`85 bis unter 90 Jahre`),
+        '90 bis unter 95 Jahre' = as.numeric(`90 bis unter 95 Jahre`),
+        '95 Jahre und mehr' = as.numeric(`95 Jahre und mehr`)    ) |>
+    pivot_longer(
+        cols = -c(Jahr, Geschlecht),
+        names_to = "Altersgruppe",
+        values_to = "Zahl"
+    ) 
+f64_nur_insgesamt_2000_2024_summe <- f64_nur_insgesamt_2000_2024 |> 
+    filter(Altersgruppe == "Insgesamt") |> 
+    summarize(total_f64_diagnoses = sum(Zahl, na.rm = TRUE))
+print(f64_nur_insgesamt_2000_2024_summe)
+f64_nur_insgesamt_2000_2024_summe <- as.numeric(f64_nur_insgesamt_2000_2024_summe$total_f64_diagnoses)
+print(f64_nur_insgesamt_2000_2024_summe)
+
+# Laut dem RKI (2019) würden trans* Frauen und trans* Männer zusammen (ohne nicht-binäre Menschen, die keinen Anspruch auf GA Maßnahmen haben) 0.49% der deutschen Bevölkerung stellen. Wie viele Menschen wären das in Deutschland 2024?
+anzahl_trans_19 <- round(0.0049 * jahr_2019_bevölkerung)
+print(anzahl_trans_19)
+anzahl_trans_24 <- round(anzahl_trans_19*change_pop_percent)
+print(anzahl_trans_24)
+prozent_op <- round(f64_nur_insgesamt_2000_2024_summe / anzahl_trans_24 * 100)  # Wie viel Prozent der trans* Menschen haben eine OP bekommen (stellverteten durch F64 Transsexualität Diagnose)
+print(prozent_op)

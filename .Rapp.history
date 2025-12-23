@@ -1,0 +1,4 @@
+load("/Users/joellevtov/Library/CloudStorage/OneDrive-SWMHGmbH/GAC/geschlechtsangleichende-ops/F64_Daten_Behandlungsort_Raw.rds")
+load("/Users/joellevtov/Library/CloudStorage/OneDrive-SWMHGmbH/GAC/geschlechtsangleichende-ops/F64_Daten_Behandlungsort_Raw.rds")
+load("/Users/joellevtov/Library/CloudStorage/OneDrive-SWMHGmbH/GAC/geschlechtsangleichende-ops/F64_Daten_Behandlungsort_Raw.rds")
+readRDS("F64_Daten_Behandlungsort_Raw.rds")

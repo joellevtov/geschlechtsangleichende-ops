@@ -1,8 +1,11 @@
 rm(list = ls()) # clear environment
 library(tidyverse)
-library(restatis)
-my_locale <- locale(decimal_mark = ",", grouping_mark = ".") # Wichtig, damit Komma als Dezimaltrenner erkannt wird und Punkte als Tausendertrenner
+my_locale_german <- locale(decimal_mark = ",", grouping_mark = ".") # Wichtig, damit Komma als Dezimaltrenner erkannt wird und Punkte als Tausendertrenner
+my_locale_american <- locale(decimal_mark = ",", grouping_mark = ".") # Wichtig, damit Komma als Dezimaltrenner erkannt wird und Punkte als Tausendertrenner
+
 setwd("/Users/joellevtov/Library/CloudStorage/OneDrive-SWMHGmbH/GAC/geschlechtsangleichende-ops") 
+knitr::opts_chunk$set(cache = FALSE)    # disable caching for all chunks
+
 # setwd("C:/Users/levtovj/OneDrive - SWMH GmbH/GAC")
 
 # F64 Analyse
@@ -150,7 +153,7 @@ write_csv(avg_f64_diagnoses_per_bundesland_wohnort, "avg_f64_diagnoses_per_bunde
 
 # Genital OP Analyse
 ## Daten laden und aufbereiten
-genital_ops_nach_behandlungsort <- read_csv2("5-646 nach Behandlungsort.csv", locale = locale(grouping_mark = "."))
+genital_ops_nach_behandlungsort <- read_csv("5-646 nach Behandlungsort.csv", locale = my_locale_german)
 genital_ops_nach_behandlungsort <- genital_ops_nach_behandlungsort |>
   mutate(across(where(is.character), str_trim)) |>  
   mutate(Wohnort.Behandlungsort = "Nach Behandlungsort") |> 
@@ -159,7 +162,7 @@ genital_ops_nach_behandlungsort <- genital_ops_nach_behandlungsort |>
     names_to = "Jahr",
     values_to = "Anzahl"
   ) 
-genital_ops_nach_wohnort <- read_csv2("5-646 nach Wohnort.csv", locale = locale(grouping_mark = "."))
+genital_ops_nach_wohnort <- read_csv("5-646 nach Wohnort.csv", locale = my_locale_german)
 genital_ops_nach_wohnort <- genital_ops_nach_wohnort |>
   mutate(across(where(is.character), str_trim)) |> 
   mutate(Wohnort.Behandlungsort = "Nach Wohnort") |> 
@@ -338,6 +341,26 @@ age_distribution_genital_ops_germany_only_nach_jahr_simplified <- age_distributi
     ) 
 print(age_distribution_genital_ops_germany_only_nach_jahr, n=21)
 write_csv(age_distribution_genital_ops_germany_only_nach_jahr_simplified, "age_distribution_genital_ops_germany_only_nach_jahr_simplified.csv")
+
+### Laut Studien sind im Durchschnitt Menschen, die FTM Genital OPS machen jünger als Menschen, die MTF Genital OPS machen. Stimmt das auch in den Daten?
+age_distribution_genital_ops_nach_geschlecht <- genital_ops_nach_geschlecht |> 
+    filter(Altersgruppe != "Alle Altersgruppen" &
+           Altersgruppe != "Unbekannt") |> 
+    filter(Geschlecht != "Unbekannt") |>
+    group_by(Geschlecht, Altersgruppe, Year) |>
+    summarize(median_num_surgeries_per_year = median(Wert, na.rm = TRUE)) 
+print(age_distribution_genital_ops_nach_geschlecht, n=40)
+age_distribution_genital_ops_nach_geschlecht_for_graphing_top_1 <- age_distribution_genital_ops_nach_geschlecht |> 
+    group_by(Year, Geschlecht) |> 
+    arrange(desc(median_num_surgeries_per_year)) |> 
+    slice_head(n=1) 
+
+print(age_distribution_genital_ops_nach_geschlecht_for_graphing_top_1, n=20)
+write_csv(age_distribution_genital_ops_nach_geschlecht, "age_distribution_genital_ops_nach_geschlecht.csv")
+write_csv(|age_distribution_genital_ops_nach_geschlecht_for_graphing_top_1, "age_distribution_genital_ops_nach_geschlecht_for_graphing_top_1.csv")
+age_distribution_genital_ops_nach_geschlecht_for_graphing_top_1 |> 
+    filter(Year %in% c("2006", "2024"))
+#### Also: Ja, das stimmt. Trans* Männer, die eine Genital OP machen lassen, sind im Durchschnitt jünger als trans* Frauen, die eine Genital OP machen lassen.
 
 ## Nach Wohnort
 age_distribution_genital_ops_per_bundesland <- by_wohnort_genital_ops |> 

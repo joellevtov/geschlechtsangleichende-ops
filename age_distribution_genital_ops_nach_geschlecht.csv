@@ -1,39 +1,419 @@
-Geschlecht,Year,15-20,20-25,25-30,30-35,35-40,40-45,45-50,50-55,55-60,60 und älter,unter 15
-trans* Frauen,2024,41,283,347,195,141,112,66,67,59,53,0
-trans* Männer,2024,141,609,594,348,180,109,76,41,35,19,0
-trans* Frauen,2023,44,250,244,146,117,93,70,68,71,49,0
-trans* Männer,2023,136,591,475,298,155,103,65,45,32,17,0
-trans* Frauen,2022,36,167,194,118,87,80,61,57,60,36,0
-trans* Männer,2022,126,505,439,263,136,111,44,36,22,17,0
-trans* Frauen,2021,40,159,165,127,57,68,54,71,53,34,0
-trans* Männer,2021,150,568,427,237,147,106,72,35,16,10,0
-trans* Frauen,2020,29,117,113,89,57,57,48,69,49,52,0
-trans* Männer,2020,135,403,364,207,157,93,46,40,17,11,0
-trans* Frauen,2019,35,113,124,100,51,48,48,63,48,52,0
-trans* Männer,2019,143,397,399,236,191,98,72,60,35,8,0
-trans* Frauen,2018,39,79,95,76,71,39,56,58,44,38,0
-trans* Männer,2018,71,305,301,156,138,108,62,47,23,5,0
-trans* Frauen,2017,25,78,91,79,44,60,45,67,44,22,0
-trans* Männer,2017,47,210,229,136,121,85,54,42,14,8,0
-trans* Frauen,2016,28,64,54,70,58,48,68,66,29,12,0
-trans* Männer,2016,44,217,240,159,140,104,63,41,11,8,0
-trans* Frauen,2015,17,46,62,49,36,45,58,56,23,14,0
-trans* Männer,2015,29,152,171,163,112,55,67,25,11,4,0
-trans* Frauen,2014,8,53,41,42,44,47,67,39,26,12,0
-trans* Männer,2014,14,132,148,133,88,64,59,26,8,0,0
-trans* Frauen,2013,10,52,45,42,42,31,68,38,24,22,0
-trans* Männer,2013,13,114,121,148,77,45,44,13,4,4,0
-trans* Frauen,2012,10,35,42,44,29,40,66,38,18,20,0
-trans* Männer,2012,15,94,110,119,69,57,49,24,3,1,0
-trans* Frauen,2011,12,30,25,27,27,52,49,33,15,6,0
-trans* Männer,2011,16,71,79,75,65,62,30,10,4,2,0
-trans* Frauen,2010,7,28,26,34,34,45,37,37,6,15,0
-trans* Männer,2010,15,41,56,74,48,28,13,14,3,1,0
-trans* Frauen,2009,13,19,21,27,28,48,21,27,11,6,0
-trans* Männer,2009,8,41,45,57,40,33,20,3,2,2,0
-trans* Frauen,2008,8,25,28,27,40,40,40,25,8,6,0
-trans* Männer,2008,4,28,31,46,25,46,19,7,1,2,0
-trans* Frauen,2007,9,17,22,26,33,44,21,16,11,7,1
-trans* Männer,2007,5,23,38,56,28,39,13,3,1,2,0
-trans* Frauen,2006,5,11,17,13,29,46,21,16,8,5,0
-trans* Männer,2006,2,16,29,46,31,24,18,1,0,2,1
+Geschlecht,Altersgruppe,Year,median_num_surgeries_per_year
+trans* Frauen,15-20,2006,5
+trans* Frauen,15-20,2007,9
+trans* Frauen,15-20,2008,8
+trans* Frauen,15-20,2009,13
+trans* Frauen,15-20,2010,7
+trans* Frauen,15-20,2011,12
+trans* Frauen,15-20,2012,10
+trans* Frauen,15-20,2013,10
+trans* Frauen,15-20,2014,8
+trans* Frauen,15-20,2015,17
+trans* Frauen,15-20,2016,28
+trans* Frauen,15-20,2017,25
+trans* Frauen,15-20,2018,39
+trans* Frauen,15-20,2019,35
+trans* Frauen,15-20,2020,29
+trans* Frauen,15-20,2021,40
+trans* Frauen,15-20,2022,36
+trans* Frauen,15-20,2023,44
+trans* Frauen,15-20,2024,41
+trans* Frauen,20-25,2006,11
+trans* Frauen,20-25,2007,17
+trans* Frauen,20-25,2008,25
+trans* Frauen,20-25,2009,19
+trans* Frauen,20-25,2010,28
+trans* Frauen,20-25,2011,30
+trans* Frauen,20-25,2012,35
+trans* Frauen,20-25,2013,52
+trans* Frauen,20-25,2014,53
+trans* Frauen,20-25,2015,46
+trans* Frauen,20-25,2016,64
+trans* Frauen,20-25,2017,78
+trans* Frauen,20-25,2018,79
+trans* Frauen,20-25,2019,113
+trans* Frauen,20-25,2020,117
+trans* Frauen,20-25,2021,159
+trans* Frauen,20-25,2022,167
+trans* Frauen,20-25,2023,250
+trans* Frauen,20-25,2024,283
+trans* Frauen,25-30,2006,17
+trans* Frauen,25-30,2007,22
+trans* Frauen,25-30,2008,28
+trans* Frauen,25-30,2009,21
+trans* Frauen,25-30,2010,26
+trans* Frauen,25-30,2011,25
+trans* Frauen,25-30,2012,42
+trans* Frauen,25-30,2013,45
+trans* Frauen,25-30,2014,41
+trans* Frauen,25-30,2015,62
+trans* Frauen,25-30,2016,54
+trans* Frauen,25-30,2017,91
+trans* Frauen,25-30,2018,95
+trans* Frauen,25-30,2019,124
+trans* Frauen,25-30,2020,113
+trans* Frauen,25-30,2021,165
+trans* Frauen,25-30,2022,194
+trans* Frauen,25-30,2023,244
+trans* Frauen,25-30,2024,347
+trans* Frauen,30-35,2006,13
+trans* Frauen,30-35,2007,26
+trans* Frauen,30-35,2008,27
+trans* Frauen,30-35,2009,27
+trans* Frauen,30-35,2010,34
+trans* Frauen,30-35,2011,27
+trans* Frauen,30-35,2012,44
+trans* Frauen,30-35,2013,42
+trans* Frauen,30-35,2014,42
+trans* Frauen,30-35,2015,49
+trans* Frauen,30-35,2016,70
+trans* Frauen,30-35,2017,79
+trans* Frauen,30-35,2018,76
+trans* Frauen,30-35,2019,100
+trans* Frauen,30-35,2020,89
+trans* Frauen,30-35,2021,127
+trans* Frauen,30-35,2022,118
+trans* Frauen,30-35,2023,146
+trans* Frauen,30-35,2024,195
+trans* Frauen,35-40,2006,29
+trans* Frauen,35-40,2007,33
+trans* Frauen,35-40,2008,40
+trans* Frauen,35-40,2009,28
+trans* Frauen,35-40,2010,34
+trans* Frauen,35-40,2011,27
+trans* Frauen,35-40,2012,29
+trans* Frauen,35-40,2013,42
+trans* Frauen,35-40,2014,44
+trans* Frauen,35-40,2015,36
+trans* Frauen,35-40,2016,58
+trans* Frauen,35-40,2017,44
+trans* Frauen,35-40,2018,71
+trans* Frauen,35-40,2019,51
+trans* Frauen,35-40,2020,57
+trans* Frauen,35-40,2021,57
+trans* Frauen,35-40,2022,87
+trans* Frauen,35-40,2023,117
+trans* Frauen,35-40,2024,141
+trans* Frauen,40-45,2006,46
+trans* Frauen,40-45,2007,44
+trans* Frauen,40-45,2008,40
+trans* Frauen,40-45,2009,48
+trans* Frauen,40-45,2010,45
+trans* Frauen,40-45,2011,52
+trans* Frauen,40-45,2012,40
+trans* Frauen,40-45,2013,31
+trans* Frauen,40-45,2014,47
+trans* Frauen,40-45,2015,45
+trans* Frauen,40-45,2016,48
+trans* Frauen,40-45,2017,60
+trans* Frauen,40-45,2018,39
+trans* Frauen,40-45,2019,48
+trans* Frauen,40-45,2020,57
+trans* Frauen,40-45,2021,68
+trans* Frauen,40-45,2022,80
+trans* Frauen,40-45,2023,93
+trans* Frauen,40-45,2024,112
+trans* Frauen,45-50,2006,21
+trans* Frauen,45-50,2007,21
+trans* Frauen,45-50,2008,40
+trans* Frauen,45-50,2009,21
+trans* Frauen,45-50,2010,37
+trans* Frauen,45-50,2011,49
+trans* Frauen,45-50,2012,66
+trans* Frauen,45-50,2013,68
+trans* Frauen,45-50,2014,67
+trans* Frauen,45-50,2015,58
+trans* Frauen,45-50,2016,68
+trans* Frauen,45-50,2017,45
+trans* Frauen,45-50,2018,56
+trans* Frauen,45-50,2019,48
+trans* Frauen,45-50,2020,48
+trans* Frauen,45-50,2021,54
+trans* Frauen,45-50,2022,61
+trans* Frauen,45-50,2023,70
+trans* Frauen,45-50,2024,66
+trans* Frauen,50-55,2006,16
+trans* Frauen,50-55,2007,16
+trans* Frauen,50-55,2008,25
+trans* Frauen,50-55,2009,27
+trans* Frauen,50-55,2010,37
+trans* Frauen,50-55,2011,33
+trans* Frauen,50-55,2012,38
+trans* Frauen,50-55,2013,38
+trans* Frauen,50-55,2014,39
+trans* Frauen,50-55,2015,56
+trans* Frauen,50-55,2016,66
+trans* Frauen,50-55,2017,67
+trans* Frauen,50-55,2018,58
+trans* Frauen,50-55,2019,63
+trans* Frauen,50-55,2020,69
+trans* Frauen,50-55,2021,71
+trans* Frauen,50-55,2022,57
+trans* Frauen,50-55,2023,68
+trans* Frauen,50-55,2024,67
+trans* Frauen,55-60,2006,8
+trans* Frauen,55-60,2007,11
+trans* Frauen,55-60,2008,8
+trans* Frauen,55-60,2009,11
+trans* Frauen,55-60,2010,6
+trans* Frauen,55-60,2011,15
+trans* Frauen,55-60,2012,18
+trans* Frauen,55-60,2013,24
+trans* Frauen,55-60,2014,26
+trans* Frauen,55-60,2015,23
+trans* Frauen,55-60,2016,29
+trans* Frauen,55-60,2017,44
+trans* Frauen,55-60,2018,44
+trans* Frauen,55-60,2019,48
+trans* Frauen,55-60,2020,49
+trans* Frauen,55-60,2021,53
+trans* Frauen,55-60,2022,60
+trans* Frauen,55-60,2023,71
+trans* Frauen,55-60,2024,59
+trans* Frauen,60 und älter,2006,5
+trans* Frauen,60 und älter,2007,7
+trans* Frauen,60 und älter,2008,6
+trans* Frauen,60 und älter,2009,6
+trans* Frauen,60 und älter,2010,15
+trans* Frauen,60 und älter,2011,6
+trans* Frauen,60 und älter,2012,20
+trans* Frauen,60 und älter,2013,22
+trans* Frauen,60 und älter,2014,12
+trans* Frauen,60 und älter,2015,14
+trans* Frauen,60 und älter,2016,12
+trans* Frauen,60 und älter,2017,22
+trans* Frauen,60 und älter,2018,38
+trans* Frauen,60 und älter,2019,52
+trans* Frauen,60 und älter,2020,52
+trans* Frauen,60 und älter,2021,34
+trans* Frauen,60 und älter,2022,36
+trans* Frauen,60 und älter,2023,49
+trans* Frauen,60 und älter,2024,53
+trans* Frauen,unter 15,2006,0
+trans* Frauen,unter 15,2007,1
+trans* Frauen,unter 15,2008,0
+trans* Frauen,unter 15,2009,0
+trans* Frauen,unter 15,2010,0
+trans* Frauen,unter 15,2011,0
+trans* Frauen,unter 15,2012,0
+trans* Frauen,unter 15,2013,0
+trans* Frauen,unter 15,2014,0
+trans* Frauen,unter 15,2015,0
+trans* Frauen,unter 15,2016,0
+trans* Frauen,unter 15,2017,0
+trans* Frauen,unter 15,2018,0
+trans* Frauen,unter 15,2019,0
+trans* Frauen,unter 15,2020,0
+trans* Frauen,unter 15,2021,0
+trans* Frauen,unter 15,2022,0
+trans* Frauen,unter 15,2023,0
+trans* Frauen,unter 15,2024,0
+trans* Männer,15-20,2006,2
+trans* Männer,15-20,2007,5
+trans* Männer,15-20,2008,4
+trans* Männer,15-20,2009,8
+trans* Männer,15-20,2010,15
+trans* Männer,15-20,2011,16
+trans* Männer,15-20,2012,15
+trans* Männer,15-20,2013,13
+trans* Männer,15-20,2014,14
+trans* Männer,15-20,2015,29
+trans* Männer,15-20,2016,44
+trans* Männer,15-20,2017,47
+trans* Männer,15-20,2018,71
+trans* Männer,15-20,2019,143
+trans* Männer,15-20,2020,135
+trans* Männer,15-20,2021,150
+trans* Männer,15-20,2022,126
+trans* Männer,15-20,2023,136
+trans* Männer,15-20,2024,141
+trans* Männer,20-25,2006,16
+trans* Männer,20-25,2007,23
+trans* Männer,20-25,2008,28
+trans* Männer,20-25,2009,41
+trans* Männer,20-25,2010,41
+trans* Männer,20-25,2011,71
+trans* Männer,20-25,2012,94
+trans* Männer,20-25,2013,114
+trans* Männer,20-25,2014,132
+trans* Männer,20-25,2015,152
+trans* Männer,20-25,2016,217
+trans* Männer,20-25,2017,210
+trans* Männer,20-25,2018,305
+trans* Männer,20-25,2019,397
+trans* Männer,20-25,2020,403
+trans* Männer,20-25,2021,568
+trans* Männer,20-25,2022,505
+trans* Männer,20-25,2023,591
+trans* Männer,20-25,2024,609
+trans* Männer,25-30,2006,29
+trans* Männer,25-30,2007,38
+trans* Männer,25-30,2008,31
+trans* Männer,25-30,2009,45
+trans* Männer,25-30,2010,56
+trans* Männer,25-30,2011,79
+trans* Männer,25-30,2012,110
+trans* Männer,25-30,2013,121
+trans* Männer,25-30,2014,148
+trans* Männer,25-30,2015,171
+trans* Männer,25-30,2016,240
+trans* Männer,25-30,2017,229
+trans* Männer,25-30,2018,301
+trans* Männer,25-30,2019,399
+trans* Männer,25-30,2020,364
+trans* Männer,25-30,2021,427
+trans* Männer,25-30,2022,439
+trans* Männer,25-30,2023,475
+trans* Männer,25-30,2024,594
+trans* Männer,30-35,2006,46
+trans* Männer,30-35,2007,56
+trans* Männer,30-35,2008,46
+trans* Männer,30-35,2009,57
+trans* Männer,30-35,2010,74
+trans* Männer,30-35,2011,75
+trans* Männer,30-35,2012,119
+trans* Männer,30-35,2013,148
+trans* Männer,30-35,2014,133
+trans* Männer,30-35,2015,163
+trans* Männer,30-35,2016,159
+trans* Männer,30-35,2017,136
+trans* Männer,30-35,2018,156
+trans* Männer,30-35,2019,236
+trans* Männer,30-35,2020,207
+trans* Männer,30-35,2021,237
+trans* Männer,30-35,2022,263
+trans* Männer,30-35,2023,298
+trans* Männer,30-35,2024,348
+trans* Männer,35-40,2006,31
+trans* Männer,35-40,2007,28
+trans* Männer,35-40,2008,25
+trans* Männer,35-40,2009,40
+trans* Männer,35-40,2010,48
+trans* Männer,35-40,2011,65
+trans* Männer,35-40,2012,69
+trans* Männer,35-40,2013,77
+trans* Männer,35-40,2014,88
+trans* Männer,35-40,2015,112
+trans* Männer,35-40,2016,140
+trans* Männer,35-40,2017,121
+trans* Männer,35-40,2018,138
+trans* Männer,35-40,2019,191
+trans* Männer,35-40,2020,157
+trans* Männer,35-40,2021,147
+trans* Männer,35-40,2022,136
+trans* Männer,35-40,2023,155
+trans* Männer,35-40,2024,180
+trans* Männer,40-45,2006,24
+trans* Männer,40-45,2007,39
+trans* Männer,40-45,2008,46
+trans* Männer,40-45,2009,33
+trans* Männer,40-45,2010,28
+trans* Männer,40-45,2011,62
+trans* Männer,40-45,2012,57
+trans* Männer,40-45,2013,45
+trans* Männer,40-45,2014,64
+trans* Männer,40-45,2015,55
+trans* Männer,40-45,2016,104
+trans* Männer,40-45,2017,85
+trans* Männer,40-45,2018,108
+trans* Männer,40-45,2019,98
+trans* Männer,40-45,2020,93
+trans* Männer,40-45,2021,106
+trans* Männer,40-45,2022,111
+trans* Männer,40-45,2023,103
+trans* Männer,40-45,2024,109
+trans* Männer,45-50,2006,18
+trans* Männer,45-50,2007,13
+trans* Männer,45-50,2008,19
+trans* Männer,45-50,2009,20
+trans* Männer,45-50,2010,13
+trans* Männer,45-50,2011,30
+trans* Männer,45-50,2012,49
+trans* Männer,45-50,2013,44
+trans* Männer,45-50,2014,59
+trans* Männer,45-50,2015,67
+trans* Männer,45-50,2016,63
+trans* Männer,45-50,2017,54
+trans* Männer,45-50,2018,62
+trans* Männer,45-50,2019,72
+trans* Männer,45-50,2020,46
+trans* Männer,45-50,2021,72
+trans* Männer,45-50,2022,44
+trans* Männer,45-50,2023,65
+trans* Männer,45-50,2024,76
+trans* Männer,50-55,2006,1
+trans* Männer,50-55,2007,3
+trans* Männer,50-55,2008,7
+trans* Männer,50-55,2009,3
+trans* Männer,50-55,2010,14
+trans* Männer,50-55,2011,10
+trans* Männer,50-55,2012,24
+trans* Männer,50-55,2013,13
+trans* Männer,50-55,2014,26
+trans* Männer,50-55,2015,25
+trans* Männer,50-55,2016,41
+trans* Männer,50-55,2017,42
+trans* Männer,50-55,2018,47
+trans* Männer,50-55,2019,60
+trans* Männer,50-55,2020,40
+trans* Männer,50-55,2021,35
+trans* Männer,50-55,2022,36
+trans* Männer,50-55,2023,45
+trans* Männer,50-55,2024,41
+trans* Männer,55-60,2006,0
+trans* Männer,55-60,2007,1
+trans* Männer,55-60,2008,1
+trans* Männer,55-60,2009,2
+trans* Männer,55-60,2010,3
+trans* Männer,55-60,2011,4
+trans* Männer,55-60,2012,3
+trans* Männer,55-60,2013,4
+trans* Männer,55-60,2014,8
+trans* Männer,55-60,2015,11
+trans* Männer,55-60,2016,11
+trans* Männer,55-60,2017,14
+trans* Männer,55-60,2018,23
+trans* Männer,55-60,2019,35
+trans* Männer,55-60,2020,17
+trans* Männer,55-60,2021,16
+trans* Männer,55-60,2022,22
+trans* Männer,55-60,2023,32
+trans* Männer,55-60,2024,35
+trans* Männer,60 und älter,2006,2
+trans* Männer,60 und älter,2007,2
+trans* Männer,60 und älter,2008,2
+trans* Männer,60 und älter,2009,2
+trans* Männer,60 und älter,2010,1
+trans* Männer,60 und älter,2011,2
+trans* Männer,60 und älter,2012,1
+trans* Männer,60 und älter,2013,4
+trans* Männer,60 und älter,2014,0
+trans* Männer,60 und älter,2015,4
+trans* Männer,60 und älter,2016,8
+trans* Männer,60 und älter,2017,8
+trans* Männer,60 und älter,2018,5
+trans* Männer,60 und älter,2019,8
+trans* Männer,60 und älter,2020,11
+trans* Männer,60 und älter,2021,10
+trans* Männer,60 und älter,2022,17
+trans* Männer,60 und älter,2023,17
+trans* Männer,60 und älter,2024,19
+trans* Männer,unter 15,2006,1
+trans* Männer,unter 15,2007,0
+trans* Männer,unter 15,2008,0
+trans* Männer,unter 15,2009,0
+trans* Männer,unter 15,2010,0
+trans* Männer,unter 15,2011,0
+trans* Männer,unter 15,2012,0
+trans* Männer,unter 15,2013,0
+trans* Männer,unter 15,2014,0
+trans* Männer,unter 15,2015,0
+trans* Männer,unter 15,2016,0
+trans* Männer,unter 15,2017,0
+trans* Männer,unter 15,2018,0
+trans* Männer,unter 15,2019,0
+trans* Männer,unter 15,2020,0
+trans* Männer,unter 15,2021,0
+trans* Männer,unter 15,2022,0
+trans* Männer,unter 15,2023,0
+trans* Männer,unter 15,2024,0

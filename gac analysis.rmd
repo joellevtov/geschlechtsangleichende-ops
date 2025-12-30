@@ -1,16 +1,21 @@
 rm(list = ls()) # clear environment
 library(tidyverse)
 my_locale_german <- locale(decimal_mark = ",", grouping_mark = ".") # Wichtig, damit Komma als Dezimaltrenner erkannt wird und Punkte als Tausendertrenner
+my_locale_destatis <- locale(grouping_mark=";")
 my_locale_american <- locale(decimal_mark = ",", grouping_mark = ".") # Wichtig, damit Komma als Dezimaltrenner erkannt wird und Punkte als Tausendertrenner
 
-setwd("/Users/joellevtov/Library/CloudStorage/OneDrive-SWMHGmbH/GAC/geschlechtsangleichende-ops") 
+setwd("/Users/joellevtov/Library/CloudStorage/OneDrive-JoelLev-Tov/Journalism/GAC/geschlechtsangleichende-ops") 
 knitr::opts_chunk$set(cache = FALSE)    # disable caching for all chunks
 
 # setwd("C:/Users/levtovj/OneDrive - SWMH GmbH/GAC")
 
 # F64 Analyse
 ## Daten einlesen und aufbereiten
-f64_daten <- read_csv('F64 Daten.csv')
+f64_daten_behandlungsort <- read_csv('5-646 nach Behandlungsort.csv')
+f64_daten_behandlungsort$Wohnort.Behandlungsort <- 'nach Behandlungsort'
+f64_daten_wohnort <- read_csv('5-646 nach Wohnort.csv')
+f64_daten_wohnort$Wohnort.Behandlungsort <- 'nach Wohnort'
+f64_daten <- bind_rows(f64_daten_behandlungsort, f64_daten_wohnort) 
 f64_wide <- f64_daten |> 
     group_by(Jahr, Ort, Geschlecht, Altersgruppe, Wohnort.Behandlungsort) |> 
     summarize(Zahl = sum(Zahl, na.rm = TRUE), .groups = "drop") |> 
@@ -354,10 +359,11 @@ age_distribution_genital_ops_nach_geschlecht_for_graphing_top_1 <- age_distribut
     group_by(Year, Geschlecht) |> 
     arrange(desc(median_num_surgeries_per_year)) |> 
     slice_head(n=1) 
-
 print(age_distribution_genital_ops_nach_geschlecht_for_graphing_top_1, n=20)
+
 write_csv(age_distribution_genital_ops_nach_geschlecht, "age_distribution_genital_ops_nach_geschlecht.csv")
-write_csv(|age_distribution_genital_ops_nach_geschlecht_for_graphing_top_1, "age_distribution_genital_ops_nach_geschlecht_for_graphing_top_1.csv")
+write_csv(age_distribution_genital_ops_nach_geschlecht_for_graphing_top_1, "age_distribution_genital_ops_nach_geschlecht_for_graphing_top_1.csv")
+
 age_distribution_genital_ops_nach_geschlecht_for_graphing_top_1 |> 
     filter(Year %in% c("2006", "2024"))
 #### Also: Ja, das stimmt. Trans* Männer, die eine Genital OP machen lassen, sind im Durchschnitt jünger als trans* Frauen, die eine Genital OP machen lassen.
@@ -619,31 +625,42 @@ write_csv(genital_ops_f64_comparison, "genital_ops_f64_comparison.csv")
 
 # Kliniken, die Behandlungen für trans* Menschen anbieten
 f64_kliniken <- read_csv("klinikfuehrer F64.csv") |> 
-    rename('Bettenanzahl' = 'Bettananzahl') |> 
+    rename(
+        'Bettenanzahl' = 'Bettananzahl',
+        Klinikname = Name) |> 
     mutate(
-    Name = str_squish(Name),
+    Klinikname = str_squish(Klinikname),
     Addresse = str_squish(Addresse),
     Bettenanzahl = as.numeric(Bettenanzahl)
   )
 print(f64_kliniken)
 genital_mzf_kliniken <- read_csv("klinikfuehrer 5-646.0.csv") |> 
+    select(-`text-muted`) |> 
+    rename(
+        `Fallzahl 5-646.0` = `Fallzahl F64`,
+        Klinikname = Name,
+        Bettenanzahl = Bettananzahl) |> 
     mutate(
-    Name = str_squish(Name),
+    Klinikname = str_squish(Klinikname),
     Addresse = str_squish(Addresse),
     Bettenanzahl = as.numeric(Bettenanzahl)
   )
 print(genital_mzf_kliniken)
 
 genital_fzm_kliniken <- read_csv("klinikfuehrer 5-646.1.csv") |> 
-    rename('Name' = 'Klinikname') |> 
+    rename(
+        'Klinikname' = 'Name',
+        `Fallzahl 5-646.1` =`Fallzahl zur Behandlung "5-646.0"`,
+        Bettenanzahl = Bettananzahl
+        ) |> 
     mutate(
-    Name = str_squish(Name),
+    Klinikname = str_squish(Klinikname),
     Addresse = str_squish(Addresse),
     Bettenanzahl = as.numeric(Bettenanzahl)
   )
-
+print(genital_fzm_kliniken)
   
-alle_genital_ops_kliniken <- full_join(genital_mzf_kliniken, genital_fzm_kliniken, by = c('Name', 'Bettenanzahl', 'Addresse',  'Stationäre Fälle insgesamt' ), suffix = c(' 5-646.0', ' 5-646.1')) |> 
+alle_genital_ops_kliniken <- full_join(genital_mzf_kliniken, genital_fzm_kliniken, by = c('Klinikname', 'Bettenanzahl', 'Addresse',  'Stationäre Fälle insgesamt'), suffix = c(' 5-646.0', ' 5-646.1')) |> 
     mutate(
         'Fallzahl NUM 5-646.0' = as.numeric(`Fallzahl 5-646.0`),
         'Fallzahl NUM 5-646.1' = as.numeric(`Fallzahl 5-646.1`)
@@ -662,6 +679,7 @@ alle_genital_ops_kliniken <- full_join(genital_mzf_kliniken, genital_fzm_klinike
     select(-c(`Fallzahl NUM 5-646.0`, `Fallzahl NUM 5-646.1`)) 
 
 print(alle_genital_ops_kliniken$Fahllzahl_genital_ops)
+view(alle_genital_ops_kliniken)
 write_csv(alle_genital_ops_kliniken, "kliniken_genital_ops.csv")
 
 alle_kliniken <- f64_kliniken |> 
@@ -676,8 +694,11 @@ print(alle_kliniken)
 write_csv(alle_kliniken, "kliniken_f64_und_genital_ops.csv")
 
 # Wie viele trans* Menschen gibt es in Deutschland und wie viele machen eine OP?
-deutschland_bevölkerung <- read_csv('Bevölkerung 2000-2024.csv') |> 
-    mutate(Jahr = str_remove(Jahr, "^31\\.12\\."))
+deutschland_bevölkerung <- read_csv2('Bevölkerung 1950-2024.csv') |> 
+    mutate(time = str_remove(time, "-12-31$"))
+print(deutschland_bevölkerung$time)
+deutschland_bevölkerung$Jahr <- deutschland_bevölkerung$time
+deutschland_bevölkerung$Anzahl <- deutschland_bevölkerung$value
 ## Deutschland Bevölkerung 2021
 jahr_2019_bevölkerung <- deutschland_bevölkerung |>
   filter(Jahr == "2019") |> 
@@ -691,12 +712,13 @@ jahr_2024_bevölkerung <- as.integer(jahr_2024_bevölkerung)
 
 change_pop <- jahr_2024_bevölkerung - jahr_2019_bevölkerung
 print(change_pop)
-change_pop_percent <- (jahr_2024_bevölkerung / jahr_2021_bevölkerung) 
+change_pop_percent <- (jahr_2024_bevölkerung / jahr_2019_bevölkerung) 
 print(change_pop_percent)
 
 # So viele F64 Diagnosen gab es bei den 15-74 Jährigen in Deutschland insgesamt - Destatis konnte keine Daten für genau die Bevölkerungsgruppe 16-74, also nehme ich das nächstbeste, 15-74. 
 # Kurz zur Info: Die Daten reflektieren nur die Hauptdiagnose. Wenn jemand z.B. für ein gebrochenes Bein ins Krankenhaus geht, aber auch Transsexualismus hat, wird nur das gebrochene Bein als Hauptdiagnose gezählt.
-f64_nur_insgesamt_2000_2024 <- read_csv('F64 2000-2024 Insgesamt only.csv', locale = my_locale) |> 
+f64_nur_insgesamt_2000_2024 <- f64_daten_grouped |> 
+    filter()
     mutate(
         'unter 1 Jahr' = as.numeric(`unter 1 Jahr`),
         '1 bis unter 5 Jahre' = as.numeric(`1 bis unter 5 Jahre`),

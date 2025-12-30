@@ -1,0 +1,443 @@
+"Name","Addresse","Fallzahl F64","Bettananzahl","Stationäre Fälle insgesamt"
+"Städtisches Klinikum Dresden - Standort Neustadt/Trachau","Industriestr. 40
+                                01129 Dresden","10","336","13,411"
+"Universitätsklinikum Dresden Carl-G.- Carus der TU Dresden","Fetscherstr. 74
+                                01307 Dresden","15","1,410","55,565"
+"Städtisches Klinikum Dresden - Standort Weißer Hirsch","Heinrich-Cotta-Straße 12
+                                01324 Dresden","Datenschutz","218","3,150"
+"Elblandkliniken Meißen-Radebeul Standort Radebeul","Heinrich-Zille-Str. 13
+                                01445 Radebeul","5","345","11,224"
+"Städt. Klinikum Görlitz GmbH","Girbigsdorfer Str. 1-3
+                                02828 Görlitz","Datenschutz","550","21,003"
+"Krankenhaus Spremberg","Karl-Marx-Str. 80
+                                03130 Spremberg","Datenschutz","205","4,664"
+"Universitätsklinikum Leipzig AöR","Liebigstr. 20
+                                04103 Leipzig","71","1,451","54,810"
+"Klinikum St. Georg","Delitzscher Str. 141
+                                04129 Leipzig","Datenschutz","842","28,778"
+"St. Elisabeth Krankenhaus","Biedermannstr. 84
+                                04277 Leipzig","Datenschutz","374","19,831"
+"Universitätsklinikum Halle (Saale)","Ernst-Grube-Str. 40
+                                06120 Halle (Saale)","6","815","35,687"
+"Universitätsklinikum Jena Lobeda","Am Klinikum 1
+                                07747 Jena","5","1,218","43,136"
+"Kliniken Erlabrunn gGmbH","Am Märzenberg 1a
+                                08359 Breitenbrunn","Datenschutz","340","7,997"
+"Klinikum Chemnitz","Flemmingstraße 2
+                                09116 Chemnitz","Datenschutz","1,384","49,209"
+"DRK-Krankenhaus Chemnitz-Rabenstein","Unritzstr. 23
+                                09117 Chemnitz","19","297","15,291"
+"Klinikum Chemnitz, Krankenhaus Dresdner Straße","Dresdner Straße 178
+                                09131 Chemnitz","Datenschutz","401","7,264"
+"Charité-Universitätsmedizin Berlin, Campus Charité Mitte","Charitéplatz 1
+                                10117 Berlin","46","3,011","130,282"
+"Sana Klinikum Lichtenberg Oskar-Ziethen Krankenhaus","Fanninger Str. 32
+                                10365 Berlin","33","672","28,524"
+"Klinik Schöneberg","Fuggerstr. 23
+                                10777 Berlin","Datenschutz","34","642"
+"Evangelische Elisabeth Klinik","Lützowstr. 24-26
+                                10785 Berlin","398","145","7,430"
+"Vivantes Klinikum Am Urban","Dieffenbachstraße  1
+                                10967 Berlin","Datenschutz","607","24,345"
+"St. Joseph-Krankenhaus Tempelhof","Bäumerplan 24
+                                12101 Berlin","Datenschutz","506","24,127"
+"Vivantes Klinikum Neukölln","Rudower Straße 48
+                                12351 Berlin","Datenschutz","1,377","38,991"
+"DRK Kliniken Berlin Köpenick","Salvador-Allende-Str. 2-8
+                                12559 Berlin","Datenschutz","564","23,015"
+"Vivantes Klinikum Kaulsdorf","Myslowitzer Straße 45
+                                12621 Berlin","Datenschutz","477","12,205"
+"BG Klinikum Unfallkrankenhaus Berlin gGmbH","Warener Str. 7
+                                12683 Berlin","Datenschutz","588","22,760"
+"HELIOS Klinikum Berlin-Buch","Schwanebecker Chaussee 50
+                                13125 Berlin","Datenschutz","1,223","47,860"
+"Vivantes Humboldt-Klinikum","Am Nordgraben 2
+                                13509 Berlin","Datenschutz","788","23,688"
+"Ev. Waldkrankenhaus Spandau","Stadtrandstr. 555-561
+                                13589 Berlin","Datenschutz","514","22,703"
+"DRK Kliniken Berlin Westend","Spandauer Damm 130
+                                14050 Berlin","22","590","25,996"
+"Schloßpark-Klinik GmbH","Heubnerweg 2
+                                14059 Berlin","Datenschutz","340","9,827"
+"HELIOS Klinikum Emil von Behring","Walterhöferstr. 11
+                                14165 Berlin","161","507","20,536"
+"Martin-Luther-Krankenhaus","Caspar-Theyss-Str. 27
+                                14193 Berlin","Datenschutz","275","16,095"
+"Klinikum Frankfurt (Oder)","Müllroser Chaussee 7
+                                15236 Frankfurt (Oder)","Datenschutz","775","21,411"
+"HELIOS Klinikum Bad Saarow","Pieskower Str. 33
+                                15526 Bad Saarow-Pieskow","Datenschutz","629","25,431"
+"Immanuel Klinik Rüdersdorf","Seebad 82/83
+                                15562 Rüdersdorf","Datenschutz","412","13,266"
+"Immanuel Klinikum Bernau Herzzentrum Brandenburg Universitätsklinikum der MHB Theodor Fontane","Ladeburger Str. 17
+                                16321 Bernau","Datenschutz","290","12,171"
+"Asklepios Klinik Pasewalk","Prenzlauer Chaussee 30
+                                17309 Pasewalk","Datenschutz","185","8,508"
+"Universitätsmedizin Greifswald","Fleischmannstraße 8
+                                17475 Greifswald","Datenschutz","930","33,547"
+"Klinikum Südstadt Rostock","Südring 81
+                                18059 Rostock","7","513","23,734"
+"KMG Klinikum Güstrow","Friedr.-Trendelenburg-Allee 1
+                                18273 Güstrow","Datenschutz","451","16,869"
+"Universitätsklinikum Hamburg-Eppendorf","Martinistr. 52
+                                20246 Hamburg","303","1,741","77,457"
+"Agaplesion Diakonieklinikum Hamburg","Hohe Weide 17
+                                20259 Hamburg","25","385","16,916"
+"Städtisches Klinikum Lüneburg  gGmbH","Bögelstr. 1
+                                21339 Lüneburg","Datenschutz","563","28,400"
+"Krankenhaus Reinbek St.-Adolfstift","Hamburger Str. 41
+                                21465 Reinbek","609","351","17,944"
+"Ev. Krankenhaus Alsterdorf","Bodelschwinghstr. 24
+                                22337 Hamburg","Datenschutz","405","5,634"
+"Universitätsklinikum Schleswig-Holstein Campus Kiel","Arnold-Heller-Str. 3
+                                24105 Kiel","Datenschutz","958","47,923"
+"Zentrum für Integrative Psychiatrie Kiel - ZIP gGmbH","Niemannsweg 147
+                                24105 Kiel","Datenschutz","251","1,913"
+"DIAKO Krankenhaus Flensburg","Knuthstr. 1
+                                24939 Flensburg","Datenschutz","400","19,884"
+"Klinikum Itzehoe","Robert-Koch-Str. 2
+                                25524 Itzehoe","31","601","31,658"
+"Westküstenkliniken Brunsbüttel und Heide gGmbH Standort Heide","Esmarchstraße 50
+                                25746 Heide","Datenschutz","681","22,317"
+"Ev. Krankenhaus Oldenburg","Steinweg 13-17
+                                26122 Oldenburg","Datenschutz","417","19,107"
+"Ubbo-Emmius-Klinik gGmbH Klinik Aurich","Wallinghausener Str. 8
+                                26603 Aurich","Datenschutz","285","17,190"
+"Bundeswehrkrankenhaus Westerstede","Lange Str. 38
+                                26655 Westerstede","Datenschutz","135","4,087"
+"Marien Hospital Papenburg-Aschendorf, Standort Aschendorf","Marienstraße 8
+                                26871 Aschendorf","Datenschutz","275","477"
+"Klinikum Bremerhaven Reinkenheide","Postbrookstraße 103
+                                27574 Bremerhaven","Datenschutz","792","25,501"
+"Kreiskrankenhaus Osterholz","Am Krankenhaus 4
+                                27711 Osterholz-Scharmbeck","Datenschutz","128","7,061"
+"Klinikum Bremen-Mitte gGmbH","St.-Jürgen-Str. 1
+                                28205 Bremen","Datenschutz","877","35,557"
+"Krankenhaus St.Joseph-Stift","Schwachhauser Heerstr. 54
+                                28209 Bremen","Datenschutz","456","19,426"
+"DIAKO Ev. Diakonie-Krankenhaus gGmbH","Gröpelinger Heerstr. 406
+                                28239 Bremen","Datenschutz","388","16,195"
+"Klinikum Bremen-Ost","Züricher Str. 40
+                                28325 Bremen","Datenschutz","716","14,647"
+"Klinikum Bremen-Nord","Hammersbeckerstr. 228
+                                28755 Bremen","Datenschutz","415","16,014"
+"Klinikum Region Hannover GmbH Klinikum Siloah","Stadionbrücke 4
+                                30459 Hannover","Datenschutz","564","23,284"
+"Medizinische Hochschule Hannover","Carl-Neuberg-Str. 1
+                                30625 Hannover","8","1,520","53,004"
+"Klinikum Hildesheim GmbH","Senator-Braun-Allee 33
+                                31135 Hildesheim","9","579","24,896"
+"Klinikum Region Hannover GmbH Krankenhaus Neustadt a. Rbg.","Lindenstr. 75
+                                31535 Neustadt","Datenschutz","272","13,964"
+"Sana-Klinikum Hameln-Pyrmont","Saint-Maur-Platz 1
+                                31785 Hameln","6","402","18,413"
+"Klinikum Herford","Schwarzenmoorstr. 70
+                                32049 Herford","Datenschutz","755","26,565"
+"Klinikum Lippe Bad Salzuflen","Heldmanstraße 45
+                                32108 Bad Salzuflen","Datenschutz","88","467"
+"Johannes Wesling Klinikum Minden","Hans-Nolte-Str. 1
+                                32429 Minden","Datenschutz","864","36,564"
+"St. Vincenz-Krankenhaus","Am Busdorf 2
+                                33098 Paderborn","Datenschutz","587","31,073"
+"Franziskus Hospital","Kiskerstraße 26
+                                33615 Bielefeld","Datenschutz","616","11,370"
+"Evangelisches Klinikum Bethel, Standort Gilead","Kantensiek 11
+                                33617 Bielefeld","Datenschutz","1,040","28,099"
+"Elisabeth Krankenhaus gGmbH","Weinbergstr. 7
+                                34117 Kassel","7","198","9,855"
+"Agaplesion Diakonie-Kliniken Kassel","Herkulesstr. 34
+                                34119 Kassel","Datenschutz","316","16,343"
+"Klinikum Kassel gGmbH","Mönchebergstr. 41-43
+                                34125 Kassel","Datenschutz","1,061","48,540"
+"Universitätsklinikum Giessen und Marburg - Standort Marburg","Baldingerstr.
+                                35043 Marburg","Datenschutz","931","38,663"
+"Universitätsklinikum Gießen und Marburg - Standort Gießen","Rudolf-Buchheim-Str. 6
+                                35392 Gießen","Datenschutz","1,279","42,648"
+"AGAPLESION EVANGELISCHES KRANKENHAUS MITTELHESSEN gGmbH","Paul-Zipp-Straße 171
+                                35398 Gießen","Datenschutz","263","10,783"
+"Agaplesion Krankenhaus Neu-Bethlehem gGmbH","Humboldtallee 8
+                                37073 Göttingen","Datenschutz","100","8,960"
+"Kliniken der Georg-August-Universität","Robert-Koch-Str. 40
+                                37075 Göttingen","Datenschutz","1,634","49,367"
+"Evang. Krankenhaus Göttingen-Weende e.V.","An der Lutter 24
+                                37075 Göttingen","7","433","18,063"
+"HELIOS Albert-Schweitzer-Klinik Northeim","Albert-Schweitzer-Weg 1
+                                37154 Northeim","Datenschutz","210","10,857"
+"Krankenhaus Marienstift","Helmstedter Str. 35 a
+                                38102 Braunschweig","Datenschutz","147","9,357"
+"Helios Klinikum Salzgitter","Kattowitzer-Str. 191
+                                38226 Salzgitter","Datenschutz","296","15,869"
+"AMEOS Klinikum Halberstadt GmbH","Gleimstr. 5
+                                38820 Halberstadt","Datenschutz","331","17,138"
+"Universitätsklinikum Magdeburg - Gerhart-Hauptmann-Straße","Gerhart-Hauptmann-Straße 35
+                                39108 Magdeburg","9","107","5,990"
+"Universitätsklinikum Magdeburg","Leipziger Str. 44
+                                39120 Magdeburg","36","842","32,289"
+"Klinikum Magdeburg gGmbH","Birkenallee 34
+                                39130 Magdeburg","5","791","28,307"
+"Universitätsklinikum Düsseldorf","Moorenstr. 5
+                                40225 Düsseldorf","Datenschutz","1,247","46,122"
+"Diakoniewerk Kaiserswerth Florence-Nightingale- Krankenhaus","Kreuzbergstr. 79
+                                40489 Düsseldorf","333","556","22,945"
+"Sana Kliniken Düsseldorf GmbH, Krankenhaus Benrath","Urdenbacher Allee 83
+                                40593 Düsseldorf","23","177","9,435"
+"Sana Kliniken Düsseldorf GmbH, Krankenhaus Gerresheim","Gräulinger-Str. 120
+                                40625 Düsseldorf","354","180","8,040"
+"Ev. Krankenhaus GmbH","Gartenstr. 4-8
+                                40822 Mettmann","Datenschutz","245","11,242"
+"Ev. Krankenhaus ""Bethesda"" gGmbH","Ludwig-Weber-Str. 15
+                                41061 Mönchengladbach","Datenschutz","226","11,588"
+"Städtische Kliniken Mönchengladbach GmbH","Hubertusstr. 100
+                                41239 Mönchengladbach","Datenschutz","554","32,293"
+"Johanna-Etienne-Krankenhaus","Am Hasenberg 46
+                                41462 Neuss","Datenschutz","415","18,062"
+"Rheinland Klinikum Dormagen","Dr. Geldmacher-Str. 20
+                                41540 Dormagen","Datenschutz","294","11,575"
+"Hermann-Josef-Krankenhaus","Tenholterstr. 43
+                                41812 Erkelenz","Datenschutz","409","20,040"
+"Agaplesion Bethesda Krankenhaus Wuppertal gGmbH","Hainstr. 35
+                                42109 Wuppertal","Datenschutz","358","16,341"
+"HELIOS Klinikum Wuppertal Barmen","Heusnerstr. 40
+                                42283 Wuppertal","10","877","37,403"
+"Krankenhaus Wermelskirchen GmbH","Königstr. 100
+                                42929 Wermelskirchen","Datenschutz","180","8,291"
+"Klinikum Dortmund gGmbH Klinikzentrum Mitte","Beurhausstraße 40
+                                44137 Dortmund","Datenschutz","963","42,093"
+"St.-Marien-Hospital","Altstadtstr. 23
+                                44534 Lünen","Datenschutz","578","19,126"
+"St. Rochus-Hospital","Glückaufstr. 10
+                                44575 Castrop-Rauxel","4","204","8,696"
+"Marienhospital Herne","Hölkeskampring 40
+                                44625 Herne","Datenschutz","535","28,335"
+"Berufsgenossenschaftliche Kliniken Bergmannsheil - Universitätsklinik -","Bürkle-de-la-Camp-Platz 1
+                                44789 Bochum","Datenschutz","512","16,610"
+"Kliniken Essen-Mitte Ev. Huyssens-Stiftung","Henricistr. 92
+                                45136 Essen","206","438","15,070"
+"Universitätsklinikum der Gesamthochschule Essen","Hufelandstr. 55
+                                45147 Essen","74","1,161","51,323"
+"LVR Klinikum Essen, Tagesklinik für Erwachsene","Wickenburgstraße 21
+                                45147 Essen","Datenschutz","322","928"
+"Elisabeth-Krankenhaus","Röntgenstr.10
+                                45661 Recklinghausen","7","230","9,667"
+"Ev. Krankenhaus","Munckelstr. 27
+                                45879 Gelsenkirchen","Datenschutz","435","16,192"
+"Marienhospital","Virchowstr. 135
+                                45886 Gelsenkirchen","Datenschutz","568","22,971"
+"Sankt Marien-Hospital-Buer","Mühlenstr. 5-9
+                                45894 Gelsenkirchen","Datenschutz","257","11,306"
+"Marienhospital","Josef-Albers-Str. 70
+                                46236 Bottrop","Datenschutz","310","13,104"
+"St. Marien-Hospital Borken","Am Boltenhof 7
+                                46325 Borken","33","316","11,264"
+"Ev. Krankenhaus Wesel","Schermbecker Landstr. 88
+                                46485 Wesel","Datenschutz","349","12,391"
+"Bethesda-Krankenhaus zu Duisburg gGmbH","Heerstr. 219
+                                47053 Duisburg","Datenschutz","413","12,983"
+"Helios Marien Klinik","Grunewaldstraße 96
+                                47053 Duisburg","7","374","6,457"
+"St. Josef Moers","Asberger Str. 9
+                                47441 Moers","Datenschutz","376","16,767"
+"St. Clemens-Hospital Geldern","Clemensstraße 1
+                                47608 Geldern","Datenschutz","305","12,582"
+"Alexianer Krefeld GmbH Krankenhaus Maria-Hilf Krefeld","Dießemer Bruch 81
+                                47805 Krefeld","Datenschutz","575","15,546"
+"St. Franziskus-Hospital","Hohenzollernring 72
+                                48145 Münster","16","598","28,752"
+"Universitätsklinikum Münster","Albert-Schweitzer-Campus 1
+                                48149 Münster","Datenschutz","1,621","47,208"
+"Fachklinik Hornheide","Dorbaumstr. 300
+                                48157 Münster","8","140","6,313"
+"Klinikum Osnabrück GmbH","Am Finkenhügel 1
+                                49076 Osnabrück","13","735","32,619"
+"Franziskus-Hospital Harderberg","Alte Rothenfelder Str. 23
+                                49124 Georgsmarienhütte","Datenschutz","287","14,099"
+"St.-Franziskus-Hospital","Franziskusstr. 6
+                                49393 Lohne","Datenschutz","140","7,209"
+"St. Katharinen-Hospital","Kapellenstr. 1-5
+                                50226 Frechen","74","431","16,569"
+"Dreifaltigkeits-Krankenhaus Wesseling","Bonner Str. 84
+                                50389 Wesseling","Datenschutz","186","6,938"
+"Cellitinnen-Severinsklösterchen Krankenhaus der Augustinerinnen","Jakobstr. 27-31
+                                50678 Köln","Datenschutz","300","12,907"
+"Eduardus-Krankenhaus","Custodisstr. 3-17
+                                50679 Köln","Datenschutz","212","8,378"
+"Cellitinnen-Krankenhaus Heilig Geist","Graseggerstr. 105
+                                50737 Köln","Datenschutz","291","16,442"
+"Universitätsklinikum Köln","Kerpener Str. 62
+                                50937 Köln","Datenschutz","1,522","57,719"
+"Kliniken der Stadt Köln Krankenhaus Holweide","Neufelder Str. 23
+                                51067 Köln","4","407","15,260"
+"Kinder- und Jugendpychiatrie","Florentine-Eicheler Str.1
+                                51067 Köln","Datenschutz","78","628"
+"Universitätsklinikum Aachen","Pauwelsstr. 30
+                                52074 Aachen","5","1,488","38,263"
+"St. Marien-Hospital gGmbH","Hospitalstr. 44
+                                52353 Düren","Datenschutz","381","15,277"
+"Städtisches Krankenhaus Heinsberg GmbH","Auf dem Brand 1
+                                52525 Heinsberg","Datenschutz","215","9,751"
+"Universitätsklinikum Bonn","Venusberg-Campus 1
+                                53127 Bonn","Datenschutz","1,306","54,757"
+"Ev. Kliniken Bonn, Waldkrankenhaus","Waldstr. 73
+                                53177 Bonn","Datenschutz","265","11,750"
+"Krankenhaus Maria Stern","Am Anger 1
+                                53424 Remagen","Datenschutz","142","4,838"
+"St. Josef-Hospital Troisdorf","Hospitalstr. 45
+                                53840 Troisdorf","7","324","12,974"
+"Katholisches Klinikum Mainz Fanny de la Roche Haus","An der Goldgrube 11
+                                55131 Mainz","Datenschutz","541","22,011"
+"Krankenhaus St. Marienwörth","Mühlenstr. 39
+                                55543 Bad Kreuznach","Datenschutz","298","11,942"
+"Diakonie Krankenhaus Bad Kreuznach","Ringstr. 64
+                                55543 Bad Kreuznach","Datenschutz","351","17,931"
+"Klinikum Idar-Oberstein GmbH","Dr. Ottmar-Kohler-Str. 2
+                                55743 Idar-Oberstein","Datenschutz","528","19,395"
+"Bundeswehrzentralkrankenhaus","Rübenacherstr. 170
+                                56072 Koblenz","Datenschutz","506","13,507"
+"Gemeinschaftsklinikum Mittelrhein - Kemperhof Koblenz","Koblenzer Str. 115-155
+                                56073 Koblenz","Datenschutz","504","21,221"
+"Katholisches Klinikum Koblenz-Montabaur - Brüderhaus Koblenz","Kardinal-Krementz-Straße 1-5
+                                56073 Koblenz","Datenschutz","484","21,150"
+"Diakonie Klinikum Ev. Jung-Stilling-Krankenhaus","Wichernstraße 40
+                                57074 Siegen","Datenschutz","483","26,360"
+"Diakonie Klinikum Kirchen","Bahnhofstr. 24
+                                57548 Kirchen","Datenschutz","279","10,124"
+"Marienkrankenhaus Schwerte","Goethestr. 19
+                                58239 Schwerte","Datenschutz","373","15,253"
+"HELIOS Klinikum Schwelm","Dr.-Möller-Str. 15
+                                58332 Schwelm","Datenschutz","371","15,270"
+"St. Barbara-Klinik Hamm-Heessen","Am Heessener Wald 1
+                                59073 Hamm","Datenschutz","448","19,921"
+"Karolinen-Hospital Hüsten","Stolte Ley 5
+                                59759 Arnsberg","Datenschutz","501","26,715"
+"Hospital Zum Heiligen Geist","Lange Str. 4-6
+                                60311 Frankfurt","Datenschutz","226","9,927"
+"AGAPLESION MARKUS KRANKENHAUS","Wilhelm-Epstein-Straße 4
+                                60431 Frankfurt am Main","213","635","20,722"
+"Krankenhaus Sachsenhausen","Schulstr. 31
+                                60594 Frankfurt","Datenschutz","192","9,645"
+"Hochwaldkrankenhaus Bad Nauheim","Chaumontplatz 1
+                                61231 Bad Nauheim","Datenschutz","241","8,734"
+"Hochtaunus-Kliniken gGmbH Bad Homburg","Zeppelinstr. 20
+                                61352 Bad Homburg","Datenschutz","492","24,573"
+"Ketteler-Krankenhaus","Lichtenplattenweg 85
+                                63071 Offenbach","Datenschutz","278","12,864"
+"Asklepios Kliniken Langen-Seligenstadt GmbH Klinik Langen","Röntgenstr. 20
+                                63225 Langen","Datenschutz","407","19,564"
+"Gesundheitszentrum Odenwaldkreis","Albert-Schweitzer-Str. 10-20
+                                64711 Erbach","Datenschutz","344","11,734"
+"Kreiskliniken Darmstadt-Dieburg","Krankenhausstr. 11
+                                64823 Groß-Umstadt","Datenschutz","363","11,009"
+"CaritasKlinikum Saarbrücken St. Theresia","Rheinstraße 2
+                                66113 Saarbrücken","10","499","22,744"
+"Universitätskliniken des Saarlandes","Kirrberger Str. 100
+                                66421 Homburg","Datenschutz","1,466","45,062"
+"DRK-Krankenhaus Saarlouis","Vaubanstr. 25
+                                66740 Saarlouis","Datenschutz","221","10,383"
+"Diakonissen-Stiftungs- Krankenhaus Speyer","Paul-Egell-Str. 33
+                                67346 Speyer","Datenschutz","484","24,805"
+"St. Vincentius-Krankenhaus","Holzstr. 4 A
+                                67346 Speyer","23","256","9,042"
+"Klinikum Worms gGmbH","Gabriel-von-Seidl-Str. 81
+                                67550 Worms","Datenschutz","696","30,516"
+"Westpfalz-Klinikum GmbH Kaiserslautern","Hellmut-Hartert-Straße  1
+                                67655 Kaiserslautern","12","975","32,570"
+"Universitätsklinikum Mannheim","Theodor-Kutzer-Ufer 1-3
+                                68167 Mannheim","120","1,352","44,176"
+"Klinikum der Universität Heidelberg","Im Neuenheimer Feld 672
+                                69120 Heidelberg","Datenschutz","1,277","56,447"
+"Krankenhaus Salem Evang. Stadtmission Heidelberg","Zeppelinstr. 11-33
+                                69121 Heidelberg","Datenschutz","238","9,487"
+"St. Elisabeth Klinik","Max-Reger-Str. 5-7
+                                69121 Heidelberg","Datenschutz","40","4,376"
+"GRN - Klinik Weinheim","Röntgenstr. 1
+                                69469 Weinheim","4","220","11,030"
+"Klinikum Stuttgart - Katharinenhospital","Kriegsbergstraße  60
+                                70174 Stuttgart","6","981","34,306"
+"Robert Bosch Krankenhaus, Standort City","Hohenheimer Str. 21
+                                70184 Stuttgart","19","150","1,908"
+"Marienhospital","Boeheimstr. 37
+                                70199 Stuttgart","18","761","30,143"
+"Robert-Bosch-Krankenhaus","Auerbachstraße 110
+                                70376 Stuttgart","Datenschutz","880","29,358"
+"Kreiskliniken Böblingen gGmbH - Kliniken Böblingen","Bunsenstraße 120
+                                71032 Böblingen","Datenschutz","335","18,105"
+"BG Klinik Tübingen","Schnarrenbergstr. 95
+                                72076 Tübingen","Datenschutz","257","8,860"
+"Zollernalb Klinikum Balingen","Tübingerstr. 30
+                                72336 Balingen","Datenschutz","242","9,900"
+"medius Klinik Nürtingen","Auf dem Säer 1
+                                72622 Nürtingen","Datenschutz","353","17,193"
+"Rems-Murr-Klinik Schorndorf","Schlichtener Str. 105
+                                73614 Schorndorf","Datenschutz","248","10,770"
+"SLK-Kliniken Heilbronn GmbH - Klinikum am Gesundbrunnen","Am Gesundbrunnen 20
+                                74078 Heilbronn","Datenschutz","971","49,598"
+"HELIOS Klinikum Pforzheim","Kanzlerstr. 2-6
+                                75175 Pforzheim","Datenschutz","500","21,816"
+"Städtisches Klinikum Karlsruhe","Moltkestr. 90
+                                76133 Karlsruhe","Datenschutz","1,596","52,948"
+"Schwarzwald-Baar Klinikum Villingen-Schwenningen GmbH","Klinikstr. 11
+                                78052 Villingen-Schwenningen","Datenschutz","826","38,440"
+"Hegau-Bodensee-Klinikum Standort Singen","Virchowstrasse 10
+                                78224 Singen","Datenschutz","448","18,992"
+"Klinikum Konstanz","Mainaustraße 35
+                                78464 Konstanz","Datenschutz","380","16,254"
+"St. Josefs-Krankenhaus","Sautierstr. 1
+                                79104 Freiburg","Datenschutz","282","20,031"
+"Universitätsklinikum Freiburg","Hugstetter Str. 49
+                                79106 Freiburg","41","1,693","64,106"
+"Kreiskrankenhaus Emmendingen","Gartenstr. 44
+                                79312 Emmendingen","Datenschutz","263","10,386"
+"Rotkreuzklinikum München","Nymphenburger Straße 163
+                                80634 München","308","435","19,677"
+"Kreiskrankenhaus München-Pasing","Steinerweg 5
+                                81241 München","Datenschutz","412","20,486"
+"Dr. Lubos Kliniken Pasing","Schmiedwegerl 2-6
+                                81241 München","465","45","1,236"
+"Dr. Lubos Kliniken Bogenhausen","Denninger Str. 44
+                                81679 München","713","85","3,866"
+"Urologische Klinik München-Planegg","Germeringer Str. 32
+                                82152 Planegg","393","75","3,515"
+"WolfartKlinik","Waldstr. 7
+                                82166 Gräfelfing","Datenschutz","105","6,860"
+"Städtisches Klinikum Friedrichshafen","Röntgenstr. 2
+                                88048 Friedrichshafen","Datenschutz","370","17,450"
+"Asklepios Klinik Lindau GmbH","Friedrichshafener Str. 82
+                                88131 Lindau","Datenschutz","110","6,037"
+"Klinikum der Universität Ulm - Standort MB/SB","Eythstraße 24
+                                89075 Ulm","4","454","23,113"
+"Klinikum der Universität Ulm","Albert-Einstein-Allee 29
+                                89081 Ulm","Datenschutz","696","25,676"
+"Klinik Günzburg","Lindenallee 1
+                                89312 Günzburg","Datenschutz","240","9,827"
+"Klinikum Nürnberg Nord","Prof.-Ernst-Nathan-Str. 1
+                                90419 Nürnberg","Datenschutz","1,215","46,144"
+"Kliniken Dr. Erler","Kontumazgarten 4-18
+                                90429 Nürnberg","Datenschutz","220","9,797"
+"Klinikum Nürnberg Süd","Breslauer Straße 201
+                                90471 Nürnberg","Datenschutz","929","38,274"
+"Klinikum der Friedrich- Alexander-Universität","Krankenhausstr. 12
+                                91054 Erlangen","17","1,462","59,704"
+"Bezirksklinikum Ansbach","Feuchtwanger Straße 38
+                                91522 Ansbach","Datenschutz","422","4,183"
+"Klinikum St. Marien","Mariahilfbergweg 7
+                                92224 Amberg","Datenschutz","598","26,437"
+"Klinikum Weiden","Söllnerstraße 16
+                                92637 Weiden","13","649","26,031"
+"Krankenhaus der Barmherzigen Brüder","Prüfeningerstr. 86
+                                93049 Regensburg","Datenschutz","985","46,298"
+"Caritas-Krankenhaus St. Josef","Landshuter Str. 65
+                                93053 Regensburg","Datenschutz","325","17,790"
+"Klinikum der Universität Regensburg","Franz-Josef-Strauß-Allee 11
+                                93053 Regensburg","Datenschutz","845","27,876"
+"Klinikum Bamberg -Betriebsstätte am Bruderwald-","Buger Str. 80
+                                96049 Bamberg","Datenschutz","1,136","35,009"
+"Klinikum Würzburg Mitte","Salvatorstr. 7
+                                97074 Würzburg","Datenschutz","675","27,775"
+"Klinikum der Universität Würzburg","Josef-Schneider-Str. 2
+                                97080 Würzburg","7","1,452","61,160"
+"Main-Klinik Ochsenfurt","Am Greinberg 25
+                                97199 Ochsenfurt","Datenschutz","140","6,208"
+"HELIOS Klinikum Erfurt GmbH","Nordhäuser Str. 74
+                                99089 Erfurt","Datenschutz","1,261","48,607"
+"Sophien- und Hufeland Klinikum","Henry-van-de-Velde-Str. 2
+                                99425 Weimar","8","582","19,174"
